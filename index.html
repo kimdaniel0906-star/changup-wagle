@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>창업 와글</title>
+
+<!-- ==========================================================
+     신청 링크는 여기만 바꾸세요.
+     지금은 같은 폴더의 사전 신청 페이지(apply.html)로 갑니다.
+     구글폼이나 탈리로 바꾸려면 따옴표 안을 그 주소로 바꾸면 됩니다.
+     (http로 시작하는 주소는 새 탭에서 열립니다)
+     ========================================================== -->
+<script>
+  const APPLY_URL = "apply.html";
+</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+<style>
+  :root{
+    --paper:#F6F2EA; --paper-2:#EEE8DB; --ink:#17161A; --ink-2:#5E5B63; --ink-3:#9A968F;
+    --line:#E2DCD0; --orange:#E8542F; --orange-soft:#FBE4DC; --blue:#2B4BEF; --blue-soft:#DDE3FC; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  body{
+    font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 20px}
+  h1,h2,h3,p{word-break:keep-all}
+
+  /* ---------- 버튼 ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 28px;border-radius:999px;
+    background:var(--orange);color:#fff;font-weight:700;font-size:17px;text-decoration:none;border:0;cursor:pointer;letter-spacing:-.01em;word-break:keep-all;text-align:center;
+    box-shadow:0 10px 26px rgba(232,84,47,.28);transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(232,84,47,.34)}
+  .btn:active{transform:translateY(0)}
+  .btn svg{width:18px;height:18px;flex:none}
+  .btn.sm{min-height:40px;padding:0 16px;font-size:14px;box-shadow:none}
+  @media (max-width:599px){ .btn:not(.sm){width:100%} }
+
+  /* ---------- 상단 고정 바 ---------- */
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line);transform:translateY(-110%);transition:transform .35s ease}
+  .topbar.show{transform:translateY(0)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+  .topbar .brand{font-weight:800;font-size:15px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+  .topbar .brand i{width:10px;height:10px;border-radius:50%;background:var(--orange);display:inline-block}
+
+  /* ---------- 첫 화면 ---------- */
+  .hero{padding:52px 0 48px}
+  .hero .wrap{display:grid;gap:36px}
+  @media (min-width:960px){
+    .hero{padding:88px 0 80px}
+    .hero .wrap{grid-template-columns:.95fr 1.05fr;align-items:center;gap:52px}
+  }
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;font-size:13px;font-weight:700;color:var(--orange);letter-spacing:.02em}
+  .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--orange)}
+  h1{font-size:clamp(30px,6vw,50px);line-height:1.18;letter-spacing:-.035em;font-weight:800}
+  h1 mark{background:none;color:inherit;background-image:linear-gradient(transparent 62%,var(--orange-soft) 62%)}
+  h1 mark.b{background-image:linear-gradient(transparent 62%,var(--blue-soft) 62%)}
+  .hero .sub{margin-top:18px;font-size:clamp(17px,2.4vw,20px);color:var(--ink-2);line-height:1.55}
+  .hero .cta{margin-top:28px}
+  .hero .gift{margin-top:12px;font-size:14px;color:var(--ink-2);display:flex;align-items:center;gap:8px}
+  .hero .gift i{width:18px;height:18px;border-radius:50%;background:var(--orange-soft);display:inline-flex;align-items:center;justify-content:center;flex:none}
+  .hero .gift i svg{width:10px;height:10px;stroke:var(--orange);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+  /* ---------- 필터 보드 ---------- */
+  .board{
+    position:relative;background:var(--white);border:1px solid var(--line);border-radius:22px;padding:18px 16px 16px;
+    box-shadow:0 30px 70px rgba(23,22,26,.10);
+  }
+  @media (min-width:600px){.board{padding:22px 22px 20px}}
+  .board .note{position:absolute;right:14px;top:12px;font-size:11px;color:var(--ink-3)}
+  .frow{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+  .frow .fl{flex:none;width:34px;font-size:12px;font-weight:800;color:var(--ink-3);padding-top:7px;letter-spacing:.02em}
+  .fchips{display:flex;flex-wrap:wrap;gap:6px}
+  .fchip{
+    font:inherit;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:999px;border:1.5px solid var(--line);
+    background:var(--white);color:var(--ink-2);cursor:pointer;transition:all .22s cubic-bezier(.2,.7,.2,1);white-space:nowrap;
+  }
+  .fchip:hover{border-color:var(--ink);color:var(--ink)}
+  .frow.cat .fchip.on{background:var(--orange);border-color:var(--orange);color:#fff;transform:scale(1.06)}
+  .frow.stage .fchip.on{background:var(--blue);border-color:var(--blue);color:#fff;transform:scale(1.06)}
+  .bar-line{height:1px;background:var(--line);margin:8px 0 12px}
+  .posts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  @media (min-width:600px){.posts{grid-template-columns:repeat(3,1fr);gap:10px}}
+  .post{
+    background:var(--paper);border:1.5px solid transparent;border-radius:14px;padding:11px 12px 10px;min-height:96px;
+    display:flex;flex-direction:column;justify-content:space-between;gap:8px;
+    transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1),filter .45s ease,border-color .3s,background .3s;
+  }
+  .post.dim{opacity:.16;transform:scale(.94);filter:grayscale(1)}
+  .post.hit{border-color:var(--ink);background:var(--white);animation:hitpop .5s cubic-bezier(.2,.9,.3,1.3)}
+  @keyframes hitpop{0%{transform:scale(.97)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+  @media (max-width:599px){.post:nth-child(9){display:none}}
+  .post .tags{display:flex;flex-wrap:wrap;gap:4px}
+  .post .t{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:999px;white-space:nowrap}
+  .post .t.c{background:var(--orange-soft);color:var(--orange)}
+  .post .t.s{background:var(--blue-soft);color:var(--blue)}
+  .post .q{font-size:12.5px;font-weight:600;line-height:1.4;color:var(--ink);word-break:keep-all}
+  .post .who{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--ink-3);font-weight:600}
+  .post .who i{width:14px;height:14px;border-radius:50%;background:var(--ink-3);display:inline-block;border:2px solid var(--paper)}
+  .post .who i+i{margin-left:-9px;background:var(--orange)}
+  .post.hit .who i{border-color:var(--white)}
+  .count{margin-top:12px;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--ink-2);font-weight:600}
+  .count b{color:var(--ink);font-size:14px}
+  .count .try{color:var(--ink-3);font-weight:500}
+
+
+  /* ---------- 아이콘·짧은 설명 ---------- */
+  .ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .flow3{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:6px;margin-top:22px}
+  .flow3 .fs{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:14px 8px;border-radius:16px;background:var(--white);border:1px solid var(--line)}
+  .flow3 .fs .ic{width:26px;height:26px}
+  .flow3 .fs b{display:block;font-size:13.5px;font-weight:800;letter-spacing:-.01em;line-height:1.25;word-break:keep-all}
+  .flow3 .fs small{display:block;margin-top:3px;font-size:11.5px;color:var(--ink-3);font-weight:600}
+  .flow3 .fs.o{color:var(--orange)} .flow3 .fs.b{color:var(--blue)} .flow3 .fs.k{color:var(--ink)}
+  .flow3 .fs b{color:var(--ink)}
+  .flow3 .arr{color:var(--ink-3);font-size:18px;font-weight:800}
+  @media (min-width:600px){.flow3{gap:10px}.flow3 .fs{padding:16px 12px}.flow3 .fs b{font-size:15px}}
+  @media (max-width:599px){
+    .flow3{grid-template-columns:1fr;gap:4px}
+    .flow3 .fs{flex-direction:row;text-align:left;gap:12px;padding:12px 14px}
+    .flow3 .fs small{display:block}
+    .flow3 .arr{text-align:center;transform:rotate(90deg);line-height:1;font-size:16px}
+  }
+  .flow3.dark .fs{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}
+  .flow3.dark .fs b{color:#fff}.flow3.dark .fs small{color:rgba(255,255,255,.5)}.flow3.dark .arr{color:rgba(255,255,255,.4)}
+
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;max-width:640px}
+  .vs .v{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;font-size:14px;font-weight:700;word-break:keep-all;line-height:1.3}
+  @media (max-width:599px){.vs{grid-template-columns:1fr;gap:6px}}
+  .vs .v.no{background:var(--paper-2);color:var(--ink-3);text-decoration:line-through;text-decoration-thickness:2px}
+  .vs .v.yes{background:var(--white);border:2px solid var(--ink);color:var(--ink)}
+  .vs .v.yes .ic{color:var(--orange)}
+  .vs .v.no .ic{color:var(--ink-3)}
+  .facts{display:grid;gap:10px;margin-top:22px}
+  @media (min-width:700px){.facts{grid-template-columns:repeat(3,1fr)}}
+  .fact{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;background:var(--white);border:1px solid var(--line);font-size:15px;font-weight:800;letter-spacing:-.01em;word-break:keep-all}
+  .fact .ic{width:24px;height:24px;color:var(--orange)}
+  .fact small{display:block;font-size:12px;color:var(--ink-3);font-weight:600;margin-top:2px}
+  .perks{display:flex;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+  .perk{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:14px;font-weight:700;color:#fff}
+  .perk .ic{color:#FF9A7A}
+  .grp .ic{width:16px;height:16px;stroke-width:2.2}
+
+
+  /* ---------- 와글와글 ---------- */
+  .buzz{position:relative;width:64px;height:30px;flex:none}
+  .buzz .av{position:absolute;bottom:0;width:22px;height:22px;border-radius:50%;border:2px solid var(--white);box-shadow:0 2px 6px rgba(23,22,26,.12)}
+  .buzz .a1{left:0;background:#E8542F}
+  .buzz .a2{left:14px;background:#2B4BEF;animation:hop 1.6s ease-in-out infinite}
+  .buzz .a3{left:28px;background:#F2B33D}
+  .buzz .a4{left:42px;background:#17161A;animation:hop 1.6s ease-in-out .5s infinite}
+  @keyframes hop{0%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+  .buzz .bb{position:absolute;top:-4px;padding:1px 6px;border-radius:9px;background:var(--orange-soft);color:var(--orange);font-size:10px;font-weight:900;line-height:1.3;opacity:0;animation:pop-bb 2.4s ease-in-out infinite}
+  .buzz .b1{left:6px;animation-delay:0s}
+  .buzz .b2{left:34px;background:var(--blue-soft);color:var(--blue);animation-delay:.8s}
+  .buzz .b3{left:20px;top:-14px;background:var(--paper-2);color:var(--ink-2);animation-delay:1.6s}
+  @keyframes pop-bb{0%,15%{opacity:0;transform:translateY(4px) scale(.6)}25%,55%{opacity:1;transform:translateY(0) scale(1)}70%,100%{opacity:0;transform:translateY(-6px) scale(.8)}}
+  .flow3 .fs.buzzcard .buzz{margin-bottom:2px}
+  @media (max-width:599px){.buzz{width:64px;height:30px}}
+
+
+  /* ---------- 방 목록 ---------- */
+  .rooms{display:flex;flex-direction:column;gap:6px;max-height:430px;overflow-y:auto;padding-right:2px;scroll-behavior:smooth}
+  @media (max-width:599px){
+    .rooms{max-height:none;overflow:visible}
+    .room:nth-child(n+8){display:none}
+    .room{gap:10px;padding:10px}
+    .ravs{width:46px;height:38px}
+    .ravs .av{width:30px;height:30px}
+    .rname{white-space:normal;font-size:13px;line-height:1.25}
+    .rname .dot{display:none}
+    .rname i.s{margin-left:2px}
+  }
+  .room{
+    display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-radius:16px;
+    background:var(--paper);border:1.5px solid transparent;text-decoration:none;color:inherit;
+    transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1),filter .45s ease,border-color .3s,background .3s;
+  }
+  .room:hover{background:var(--white);border-color:var(--line)}
+  .room.dim{opacity:.16;transform:scale(.97);filter:grayscale(1)}
+  .room.hit{border-color:var(--ink);background:var(--white);animation:hitpop .5s cubic-bezier(.2,.9,.3,1.3)}
+  .ravs{position:relative;width:52px;height:40px;flex:none}
+  .ravs .av{position:absolute;top:0;width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid var(--white);box-shadow:0 2px 6px rgba(23,22,26,.12);background:var(--paper-2)}
+  .ravs .av svg{width:100%;height:100%;display:block}
+  .ravs .av:nth-child(1){left:0;z-index:2}
+  .ravs .av:nth-child(2){left:16px;z-index:1;top:6px}
+  .ravs .live{position:absolute;right:2px;bottom:2px;width:11px;height:11px;border-radius:50%;background:#2BB673;border:2px solid var(--white);animation:pulse-live 1.8s ease-in-out infinite}
+  @keyframes pulse-live{0%,100%{box-shadow:0 0 0 0 rgba(43,182,115,.5)}50%{box-shadow:0 0 0 5px rgba(43,182,115,0)}}
+  .rbody{min-width:0}
+  .rname{display:flex;align-items:center;gap:5px;font-size:13.5px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rname i{width:7px;height:7px;border-radius:50%;display:inline-block;flex:none}
+  .rname i.c{background:var(--orange)} .rname i.s{background:var(--blue)}
+  .rname .dot{color:var(--ink-3);font-weight:600}
+  .rlast{margin-top:2px;font-size:12px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rlast b{font-weight:700;color:var(--ink)}
+  .rmeta{display:flex;flex-direction:column;align-items:flex-end;gap:5px;font-size:11px;color:var(--ink-3);font-weight:600;white-space:nowrap}
+  .rmeta .badge{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--orange);color:#fff;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+  .rmeta .n{display:flex;align-items:center;gap:3px}
+  .rmeta .n svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+
+  /* ---------- 채팅방 ---------- */
+  .rhead{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--line);margin-top:12px}
+  .rhead .ravs{width:52px;height:40px}
+  .rhead .rt{font-size:14px;font-weight:800;letter-spacing:-.01em}
+  .rhead .rs{font-size:11.5px;color:var(--ink-3);font-weight:600;display:flex;align-items:center;gap:5px}
+  .rhead .rs i{width:7px;height:7px;border-radius:50%;background:#2BB673;display:inline-block}
+  .msg.o{flex-direction:row;align-items:flex-end;gap:8px;max-width:96%}
+  .msg.o .mav{width:30px;height:30px;border-radius:50%;overflow:hidden;flex:none;border:2px solid var(--white);box-shadow:0 2px 6px rgba(23,22,26,.12);background:var(--paper-2)}
+  .msg.o .mav svg{width:100%;height:100%;display:block}
+  .msg.o .mcol{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .msg .who{display:flex;align-items:center;gap:6px}
+  .msg .who .tm{font-weight:600;color:var(--ink-3);font-size:10.5px}
+  .msg.me .who .tm{margin-left:4px}
+
+
+  /* ---------- 등장 애니메이션 ---------- */
+  .intro{position:fixed;inset:0;z-index:100;background:var(--paper);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .intro.out{animation:intro-out .55s ease forwards}
+  @keyframes intro-out{to{opacity:0;visibility:hidden}}
+  .intro-stage{position:relative;width:min(92vw,560px);height:min(80vh,420px);display:flex;flex-direction:column;align-items:center;justify-content:center;--rx:1;--ry:1;--rb:1}
+  @media (max-width:599px){.intro-stage{--rx:.5;--ry:.72;--rb:.95}.ia .face{width:44px;height:44px}.ia .lab{font-size:10px}.ib{font-size:11px;padding:4px 9px}}
+  .intro-title{display:flex;gap:.18em;font-size:clamp(44px,12vw,84px);font-weight:900;letter-spacing:-.04em;line-height:1}
+  .intro-title span{display:inline-block;opacity:0;transform:translateY(30px) scale(.8);animation:title-in .7s cubic-bezier(.2,.9,.3,1.3) forwards}
+  .intro-title .w1{color:var(--ink);animation-delay:.15s}
+  .intro-title .w2{color:var(--orange);animation-delay:.32s}
+  @keyframes title-in{to{opacity:1;transform:none}}
+  .intro-sub{margin-top:14px;font-size:clamp(14px,2.4vw,18px);font-weight:700;color:var(--ink-2);opacity:0;animation:fade-in .5s ease 1.2s forwards}
+  @keyframes fade-in{to{opacity:1}}
+  .ia{position:absolute;left:50%;top:50%;width:64px;margin:-40px 0 0 -32px;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0;
+      transform:translate(var(--sx),var(--sy)) scale(.3);animation:jump-in .85s cubic-bezier(.2,.9,.3,1.25) var(--d) forwards}
+  .ia .face{width:56px;height:56px;border-radius:50%;overflow:hidden;border:3px solid var(--white);box-shadow:0 10px 24px rgba(23,22,26,.16);background:var(--paper-2)}
+  .ia .face svg{width:100%;height:100%;display:block}
+  .ia .lab{font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--white);border:1px solid var(--line);color:var(--ink-2);white-space:nowrap}
+  .ia::after{content:"뽁";position:absolute;top:-14px;right:-6px;font-size:12px;font-weight:900;color:var(--orange);opacity:0;animation:bok .6s ease calc(var(--d) + .55s) forwards}
+  @keyframes bok{0%{opacity:0;transform:translateY(4px) scale(.6)}30%{opacity:1;transform:translateY(-2px) scale(1.1)}100%{opacity:0;transform:translateY(-10px) scale(.9)}}
+  @keyframes jump-in{
+    0%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(.3)}
+    55%{opacity:1;transform:translate(calc(var(--tx) * var(--rx)),calc(var(--ty) * var(--ry))) scale(1.18)}
+    75%{transform:translate(calc(var(--tx) * var(--rx)),calc(var(--ty) * var(--ry) - 8px)) scale(.96)}
+    100%{opacity:1;transform:translate(calc(var(--tx) * var(--rx)),calc(var(--ty) * var(--ry))) scale(1)}
+  }
+  .ib{position:absolute;left:50%;top:50%;padding:6px 11px;border-radius:14px;font-size:13px;font-weight:900;white-space:nowrap;opacity:0;
+      transform:translate(calc(var(--tx) * var(--rx)),calc(var(--ty) * var(--rb))) scale(.5);animation:bub-in .45s cubic-bezier(.2,.9,.3,1.4) var(--d) forwards}
+  .ib.o{background:var(--orange);color:#fff} .ib.b{background:var(--blue);color:#fff} .ib.k{background:var(--ink);color:#fff} .ib.p{background:var(--orange-soft);color:var(--orange)}
+  @keyframes bub-in{to{opacity:1;transform:translate(calc(var(--tx) * var(--rx)),calc(var(--ty) * var(--rb))) scale(1)}}
+  .intro-skip{position:absolute;right:18px;bottom:18px;font:inherit;font-size:13px;font-weight:700;color:var(--ink-3);background:none;border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer}
+  .intro-skip:hover{color:var(--ink);border-color:var(--ink)}
+  body.intro-on{overflow:hidden}
+  @media (prefers-reduced-motion: reduce){.intro{display:none}}
+
+
+  /* ---------- 와글와글: 실시간 띠 ---------- */
+  .ticker{background:var(--ink);color:#fff;overflow:hidden;height:38px;display:flex;align-items:center;position:relative}
+  .ticker .lbl{flex:none;display:flex;align-items:center;gap:7px;padding:0 14px;height:100%;background:var(--orange);font-size:12px;font-weight:900;letter-spacing:.02em;z-index:2;white-space:nowrap}
+  .ticker .lbl i{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse-w 1.4s ease-in-out infinite}
+  @keyframes pulse-w{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+  .ticker .track{display:flex;white-space:nowrap;animation:tick 42s linear infinite;will-change:transform}
+  .ticker:hover .track{animation-play-state:paused}
+  .ticker .track span{padding:0 22px;font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
+  .ticker .track span b{color:#FFB39A;font-weight:800}
+  .ticker .track span::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--orange);margin-right:12px;vertical-align:middle}
+  @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ---------- 와글와글: 떠다니는 말풍선 ---------- */
+  .hero{position:relative;overflow:hidden}
+  .hero .wrap{position:relative;z-index:1}
+  .chatter{position:absolute;inset:0;pointer-events:none;z-index:0}
+  .cb{position:absolute;padding:7px 12px;border-radius:14px;font-size:12.5px;font-weight:700;white-space:nowrap;background:var(--white);border:1px solid var(--line);color:var(--ink-2);
+      box-shadow:0 6px 16px rgba(23,22,26,.06);opacity:0;animation:floaty var(--t,9s) ease-in-out var(--d,0s) infinite}
+  .cb::after{content:"";position:absolute;left:14px;bottom:-5px;width:9px;height:9px;background:inherit;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+  .cb.o{background:var(--orange-soft);border-color:var(--orange-soft);color:var(--orange)} .cb.o::after{border-color:var(--orange-soft)}
+  .cb.b{background:var(--blue-soft);border-color:var(--blue-soft);color:var(--blue)} .cb.b::after{border-color:var(--blue-soft)}
+  .cb.k{background:var(--ink);border-color:var(--ink);color:#fff} .cb.k::after{border-color:var(--ink)}
+  @keyframes floaty{0%{opacity:0;transform:translateY(24px) rotate(var(--rot,0deg)) scale(.9)}12%{opacity:.9;transform:translateY(0) rotate(var(--rot,0deg)) scale(1)}70%{opacity:.9}100%{opacity:0;transform:translateY(-60px) rotate(var(--rot,0deg)) scale(.95)}}
+  @media (max-width:959px){.cb{display:none}.cb.m{display:block;font-size:11px;padding:5px 9px;top:10px!important}.hero{padding-top:68px}}
+
+  /* ---------- 와글와글: 스티커 ---------- */
+  .sticker{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;background:var(--orange);color:#fff;font-size:12px;font-weight:900;letter-spacing:.01em;
+           transform:rotate(-3deg);box-shadow:0 6px 14px rgba(232,84,47,.28);white-space:nowrap}
+  .sticker.b{background:var(--blue);box-shadow:0 6px 14px rgba(43,75,239,.28);transform:rotate(2deg)}
+  .sticker.k{background:var(--ink);box-shadow:0 6px 14px rgba(23,22,26,.2);transform:rotate(-2deg)}
+  .sticker i{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse-w 1.4s ease-in-out infinite}
+  .board .sticker{position:absolute;left:14px;top:-14px;z-index:3}
+  .board{margin-top:8px}
+  .h2row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .h2row h2{margin:0}
+  .crowd{display:flex;align-items:center;gap:10px;margin-top:12px}
+  .crowd .avs{display:flex}
+  .crowd .avs span{width:26px;height:26px;border-radius:50%;overflow:hidden;border:2px solid var(--white);margin-left:-8px;background:var(--paper-2);box-shadow:0 2px 6px rgba(23,22,26,.12);animation:pop-av .5s cubic-bezier(.2,.9,.3,1.4) both}
+  .crowd .avs span:first-child{margin-left:0}
+  .crowd .avs span svg{width:100%;height:100%;display:block}
+  @keyframes pop-av{from{transform:scale(0)}to{transform:scale(1)}}
+  .crowd small{font-size:12.5px;color:var(--ink-2);font-weight:700}
+  .crowd small b{color:var(--ink)}
+
+  /* ---------- 와글와글: 방이 살아 움직임 ---------- */
+  .room.fresh{animation:room-in .55s cubic-bezier(.2,.9,.3,1.25)}
+  @keyframes room-in{0%{transform:translateY(-14px);background:var(--orange-soft)}100%{transform:none}}
+  .rmeta .badge.bump{animation:badge-pop .45s cubic-bezier(.2,.9,.3,1.5)}
+  @keyframes badge-pop{0%{transform:scale(.6)}60%{transform:scale(1.35)}100%{transform:scale(1)}}
+  .rlast.new b::after{content:"NEW";margin-left:6px;font-size:9px;font-weight:900;color:var(--orange);vertical-align:middle;letter-spacing:.04em}
+
+
+  /* ---------- 하단부 와글와글 ---------- */
+  .talk{position:relative;overflow:hidden}
+  .talk .wrap{position:relative;z-index:1}
+  .sys{align-self:center;font-size:11.5px;font-weight:700;color:var(--ink-3);background:var(--paper-2);padding:4px 10px;border-radius:999px;animation:msgin .4s}
+  .sys b{color:var(--ink-2)}
+  .rhead .rs i{animation:pulse-live 1.8s ease-in-out infinite}
+  .free{position:relative}
+  .free .head{position:relative}
+  .free .sticker.pin{position:absolute;right:0;top:-34px}
+  @media (max-width:760px){.free .sticker.pin{position:static;display:inline-flex;margin-top:10px}}
+  .checking{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px}
+  .checking .avs{display:flex}
+  .checking .avs span{width:28px;height:28px;border-radius:50%;overflow:hidden;border:2px solid var(--white);margin-left:-9px;background:var(--paper-2);box-shadow:0 2px 6px rgba(23,22,26,.12);animation:pop-av .5s cubic-bezier(.2,.9,.3,1.4) both}
+  .checking .avs span:first-child{margin-left:0}
+  .checking .avs span svg{width:100%;height:100%;display:block}
+  .checking small{font-size:12.5px;color:var(--ink-2);font-weight:700}
+  .checking small b{color:var(--ink)}
+  .voice .say{animation:bob-soft 5s ease-in-out infinite;animation-delay:calc(var(--i) * -.9s)}
+  @keyframes bob-soft{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  .voice .react{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:var(--orange);background:var(--orange-soft);padding:3px 9px;border-radius:999px}
+  .voice .react svg{width:12px;height:12px;stroke:var(--orange);fill:var(--orange);stroke-width:1.5}
+  .voice .react.bump{animation:badge-pop .45s cubic-bezier(.2,.9,.3,1.5)}
+  .queue{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:30px;flex-wrap:wrap}
+  .queue .door{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:8px 14px;border-radius:999px}
+  .queue .door .ic{color:#FF9A7A;width:18px;height:18px}
+  .queue .line{display:flex;align-items:center;min-height:36px}
+  .queue .line span{width:32px;height:32px;border-radius:50%;overflow:hidden;border:2px solid var(--ink);margin-left:-10px;background:var(--paper-2);box-shadow:0 2px 8px rgba(0,0,0,.4);animation:walk-in .6s cubic-bezier(.2,.9,.3,1.3) both}
+  .queue .line span:first-child{margin-left:0}
+  .queue .line span svg{width:100%;height:100%;display:block}
+  .queue .line span.leave{animation:walk-out .5s ease forwards}
+  @keyframes walk-in{from{transform:translateX(40px) scale(.4);opacity:0}to{transform:none;opacity:1}}
+  @keyframes walk-out{to{transform:translateX(-30px) scale(.3);opacity:0;width:0;margin-left:0;border-width:0}}
+  .queue small{font-size:12.5px;color:rgba(255,255,255,.6);font-weight:700;width:100%;text-align:center}
+
+
+  /* ---------- 체크리스트: 날개 달린 서류 ---------- */
+  .free{overflow:hidden}
+  .free .wrap{position:relative;z-index:1}
+  .sky{position:absolute;inset:0;pointer-events:none;z-index:0}
+  .fdoc{position:absolute;left:-120px;width:84px;height:60px;animation:fly-x var(--t,22s) linear var(--d,0s) infinite;opacity:.95}
+  .fdoc svg{width:100%;height:100%;overflow:visible;animation:fly-bob 1.6s ease-in-out infinite}
+  .fdoc.rev{animation-name:fly-x-rev}
+  .fdoc .sheet{fill:#fff;stroke:#17161A;stroke-width:1.6}
+  .fdoc .wing path{fill:#fff;stroke:#17161A;stroke-width:1.4;stroke-linejoin:round}
+  .fdoc .wing{transform-box:fill-box;transform-origin:100% 80%;animation:flap .32s ease-in-out infinite alternate}
+  .fdoc .wr{transform-origin:0% 80%;animation-name:flap-r}
+  @keyframes flap{from{transform:rotate(14deg)}to{transform:rotate(-22deg)}}
+  @keyframes flap-r{from{transform:rotate(-14deg)}to{transform:rotate(22deg)}}
+  @keyframes fly-x{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 240px))}}
+  @keyframes fly-x-rev{from{transform:translateX(calc(100vw + 240px)) scaleX(-1)}to{transform:translateX(0) scaleX(-1)}}
+  @keyframes fly-bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-9px) rotate(3deg)}}
+  .rider{position:absolute;left:-160px;bottom:6px;width:120px;height:110px;animation:fly-x 16s linear 1.5s infinite}
+  .rider .inner{position:relative;width:100%;height:100%;animation:fly-bob 1.3s ease-in-out infinite}
+  .rider .fdoc{position:absolute;left:10px;top:0;width:96px;height:68px;animation:none}
+  .rider .fdoc svg{animation:none}
+  .rider .face{position:absolute;left:34px;top:52px;width:50px;height:50px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 8px 20px rgba(23,22,26,.18);background:var(--paper-2)}
+  .rider .face svg{width:100%;height:100%;display:block}
+  .rider .hand{position:absolute;left:52px;top:44px;width:14px;height:14px;border-radius:50%;background:#F6D2BC;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.15)}
+  .rider .yay{position:absolute;left:86px;top:44px;padding:3px 8px;border-radius:10px;background:var(--orange);color:#fff;font-size:11px;font-weight:900;white-space:nowrap;animation:pop-bb 2.6s ease-in-out infinite}
+  @media (max-width:599px){.fdoc{width:58px;height:42px}.rider{width:90px;height:84px;transform:scale(.8)}.rider .fdoc{width:72px;height:52px}.rider .face{left:24px;top:38px;width:40px;height:40px}.rider .hand{left:40px;top:33px}.rider .yay{left:66px;top:32px}}
+  @media (prefers-reduced-motion: reduce){.fdoc,.rider{display:none}}
+
+  /* ---------- 후기: 옹기종기 동네 ---------- */
+  .voices{position:relative;overflow:hidden;padding-bottom:230px}
+  @media (max-width:599px){.voices{padding-bottom:160px}}
+  .voices .wrap{position:relative;z-index:1}
+  .town{position:absolute;left:0;right:0;bottom:0;height:200px;pointer-events:none;z-index:0}
+  @media (max-width:599px){.town{height:130px}}
+  .town svg{width:100%;height:100%;display:block}
+  .town .smoke{animation:smoke 3.2s ease-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+  .town .smoke.s2{animation-delay:1.1s}.town .smoke.s3{animation-delay:2.2s}
+  @keyframes smoke{0%{opacity:0;transform:translateY(0) scale(.5)}30%{opacity:.7}100%{opacity:0;transform:translateY(-30px) scale(1.4)}}
+  .town .win{animation:blink 2.4s ease-in-out infinite}
+  .town .win.b{animation-delay:.8s}.town .win.c{animation-delay:1.6s}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+  .town .rocket{animation:rocket 2.8s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+  @keyframes rocket{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .town .flame{animation:flame .25s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 0}
+  @keyframes flame{from{transform:scaleY(.7)}to{transform:scaleY(1.2)}}
+  .town .cloud{animation:cloud 30s linear infinite}
+  .town .cloud.c2{animation-duration:42s;animation-delay:-14s}
+  @keyframes cloud{from{transform:translateX(-200px)}to{transform:translateX(1400px)}}
+  .town .dish{animation:dish 6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+  @keyframes dish{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+
+  /* ---------- 공통 섹션 ---------- */
+  section h2{font-size:clamp(26px,4.6vw,40px);letter-spacing:-.03em;line-height:1.24;font-weight:800;max-width:760px}
+  .lead{margin-top:14px;font-size:clamp(18px,2.6vw,23px);font-weight:600;line-height:1.45;max-width:760px}
+  .lead b{color:var(--orange);font-weight:800}
+  .io{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  .io.reveal{opacity:1;transform:none}
+
+  /* ---------- 대화 체험 ---------- */
+  .talk{padding:80px 0 88px;border-top:1px solid var(--line)}
+  .demo{display:grid;gap:18px;margin-top:40px}
+  @media (min-width:900px){.demo{grid-template-columns:.9fr 1.1fr;gap:24px;align-items:start}}
+  .panel{background:var(--white);border:1px solid var(--line);border-radius:22px;padding:20px 18px;box-shadow:0 24px 60px rgba(23,22,26,.08);position:relative}
+  @media (min-width:600px){.panel{padding:24px 24px}}
+  .panel .pt{font-size:12px;font-weight:800;color:var(--ink-3);letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+  .panel .pt i{width:8px;height:8px;border-radius:50%;background:var(--orange);display:inline-block}
+  .mine{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+  .mine .chip{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--ink);color:#fff}
+  .mine .chip.c{background:var(--orange)}
+  .mine .chip.s{background:var(--blue)}
+  .qs{margin-top:18px;display:grid;gap:8px}
+  .qbtn{
+    font:inherit;text-align:left;font-size:14.5px;font-weight:700;color:var(--ink);background:var(--paper);border:1.5px solid transparent;
+    border-radius:14px;padding:13px 14px;cursor:pointer;transition:all .2s;line-height:1.4;word-break:keep-all;display:flex;gap:10px;align-items:flex-start;
+  }
+  .qbtn small{flex:none;font-size:11px;font-weight:800;color:var(--blue);background:var(--blue-soft);padding:2px 7px;border-radius:999px;margin-top:2px}
+  .qbtn:hover{border-color:var(--ink)}
+  .qbtn.on{background:var(--white);border-color:var(--ink);box-shadow:0 8px 20px rgba(23,22,26,.08)}
+  .ask-btn{margin-top:14px;width:100%;min-height:50px;font-size:16px}
+  .panel .hintline{margin-top:10px;font-size:12px;color:var(--ink-3);text-align:center}
+
+  .thread-panel{min-height:420px;display:flex;flex-direction:column}
+  .thread-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .toggle{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--ink-2);cursor:pointer;user-select:none}
+  .toggle .sw{width:40px;height:22px;border-radius:999px;background:var(--line);position:relative;transition:background .25s}
+  .toggle .sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .25s cubic-bezier(.2,.9,.3,1.3)}
+  .toggle.on .sw{background:var(--orange)}
+  .toggle.on .sw::after{transform:translateX(18px)}
+  .msgs{margin-top:14px;display:flex;flex-direction:column;gap:10px;flex:1;max-height:540px;overflow-y:auto;padding-right:4px;scroll-behavior:smooth}
+  .msg{max-width:92%;display:flex;flex-direction:column;gap:6px;animation:msgin .45s cubic-bezier(.2,.9,.3,1.2);transition:opacity .4s,transform .4s,filter .4s}
+  @keyframes msgin{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:none}}
+  .msg.me{align-self:flex-end;align-items:flex-end}
+  .msg.me .bub{background:var(--ink);color:#fff;border-radius:16px 16px 4px 16px;font-weight:700}
+  .msg .bub{background:var(--paper);border-radius:16px 16px 16px 4px;padding:11px 14px;font-size:14px;line-height:1.45;word-break:keep-all}
+  .msg .who{font-size:11px;font-weight:700;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+  .msg .who i{width:16px;height:16px;border-radius:50%;background:var(--ink-3);display:inline-block}
+  .msg .who i.q{background:var(--orange)}
+  .msg .cond{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+  .msg .cond .t{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--white);border:1px solid var(--line);color:var(--ink-2)}
+  .msg .cond .t.hit{background:var(--orange-soft);border-color:var(--orange-soft);color:var(--orange)}
+  .msg .pick{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 10px;border-radius:8px;background:var(--orange-soft);color:var(--orange);font-weight:800;font-size:12.5px}
+  .msg .pick.quit{background:var(--paper-2);color:var(--ink-2)}
+  .msg .pick span{color:var(--ink-2);font-weight:600;font-size:11px}
+  .msg.dim{opacity:.18;filter:grayscale(1);transform:scale(.97)}
+  .typing{display:flex;gap:4px;padding:12px 14px;background:var(--paper);border-radius:16px 16px 16px 4px;width:max-content;animation:msgin .3s}
+  .typing i{width:7px;height:7px;border-radius:50%;background:var(--ink-3);animation:blink 1s infinite}
+  .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+  .summary{margin-top:6px;border:2px solid var(--ink);border-radius:16px;padding:14px 16px;background:var(--white);animation:msgin .5s}
+  .summary .st{font-size:12px;font-weight:800;color:var(--ink-3);letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+  .summary .st b{color:var(--ink);font-size:13px}
+  .summary .rows{margin-top:10px;display:grid;gap:8px}
+  .summary .row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;font-size:13px}
+  .summary .row .conds{display:flex;flex-wrap:wrap;gap:4px}
+  .summary .row .t{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--paper-2);color:var(--ink-2)}
+  .summary .row .res{font-weight:800;color:var(--orange);white-space:nowrap}
+  .summary .row .res.quit{color:var(--ink-2)}
+  .summary .row .res small{display:block;font-size:11px;color:var(--ink-3);font-weight:600;text-align:right}
+  .replybox{display:flex;align-items:center;justify-content:space-between;margin-top:4px;padding:11px 14px;border-radius:999px;border:1.5px dashed var(--line);color:var(--ink-3);font-size:13px;font-weight:600;animation:msgin .4s}
+  .replybox .ic{width:18px;height:18px;color:var(--orange)}
+  .empty{margin:auto;text-align:center;color:var(--ink-3);font-size:14px;padding:40px 0}
+  .empty b{display:block;color:var(--ink-2);font-size:16px;margin-bottom:6px}
+
+  .talk .body{margin-top:44px;display:grid;gap:22px;max-width:820px}
+  .talk .body p{font-size:clamp(17px,2.2vw,20px);color:var(--ink-2);line-height:1.6}
+  .talk .body p b{color:var(--ink);font-weight:700}
+  .stack{display:flex;align-items:center;gap:16px}
+  .stack svg{flex:none;width:64px;height:64px}
+
+  /* ---------- 체크리스트 ---------- */
+  .free{padding:80px 0 88px;background:var(--paper-2)}
+  .free .head{text-align:center;max-width:760px;margin:0 auto}
+  .free .head h2{margin:0 auto}
+  .free .head .hint{margin-top:12px;font-size:14px;color:var(--ink-3)}
+  .paper{position:relative;background:var(--white);border-radius:22px;padding:26px 22px 22px;max-width:640px;margin:34px auto 0;border:1px solid var(--line);box-shadow:0 24px 60px rgba(23,22,26,.08)}
+  @media (min-width:600px){.paper{padding:32px 34px 28px}}
+  .paper::before{content:"";position:absolute;left:50%;top:-12px;width:90px;height:24px;transform:translateX(-50%) rotate(-2deg);background:var(--orange-soft);opacity:.9;border-radius:2px}
+  .progress{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:700;color:var(--ink-2)}
+  .progress b{font-size:18px;color:var(--ink);letter-spacing:-.02em}
+  .bar{height:8px;background:var(--paper-2);border-radius:99px;margin:10px 0 6px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--orange);border-radius:99px;transition:width .45s cubic-bezier(.2,.7,.2,1)}
+  .grp{display:flex;align-items:center;gap:8px;margin-top:18px;font-size:12px;font-weight:800;color:var(--blue);letter-spacing:.02em}
+  .grp i{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--blue-soft)}
+  .item{
+    display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;padding:13px 0;border-top:1px solid var(--line);
+    font:inherit;font-size:17px;color:var(--ink);cursor:pointer;opacity:0;transform:translateY(14px);
+    transition:opacity .5s ease,transform .5s ease,color .2s;transition-delay:calc(var(--i) * 60ms);word-break:keep-all;line-height:1.45;
+  }
+  .grp + .item{border-top:0;padding-top:8px}
+  .reveal .item{opacity:1;transform:none}
+  .item .box{flex:none;width:24px;height:24px;border:2px solid var(--ink);border-radius:7px;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+  .item .box svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .3s ease .05s}
+  .item.done .box{background:var(--orange);border-color:var(--orange)}
+  .item.done .box svg{stroke-dashoffset:0}
+  .item span:last-child{text-decoration:line-through;text-decoration-color:transparent;text-decoration-thickness:2px;transition:color .2s,text-decoration-color .3s}
+  .item.done span:last-child{color:var(--ink-3);text-decoration-color:var(--ink-3)}
+  .paper.complete{animation:wiggle .6s ease}
+  @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}75%{transform:rotate(-.6deg)}}
+  .next{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:18px;color:var(--orange);font-weight:800;font-size:14px;opacity:0;transform:translateY(-6px);transition:opacity .4s,transform .4s}
+  .paper.complete .next{opacity:1;transform:none}
+  .next svg{width:22px;height:22px;stroke:var(--orange);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;animation:bob 1.2s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+
+  /* ---------- 후기 ---------- */
+  .voices{padding:80px 0 88px;background:var(--paper)}
+  .voices .head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .voices .head .tagline{font-size:12px;font-weight:700;color:var(--ink-3);padding:6px 10px;border:1px dashed var(--line);border-radius:999px}
+  .vgrid{display:grid;gap:14px;margin-top:32px}
+  @media (min-width:760px){.vgrid{grid-template-columns:1fr 1fr;gap:18px}}
+  .voice{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:start;opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease;transition-delay:calc(var(--i) * 120ms)}
+  .reveal .voice{opacity:1;transform:none}
+  .avatar{width:64px;height:64px;border-radius:50%;overflow:hidden;border:3px solid var(--white);box-shadow:0 8px 20px rgba(23,22,26,.14);background:var(--paper-2)}
+  .avatar svg{width:100%;height:100%;display:block}
+  .voice .say{position:relative;background:var(--white);border:1px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:0 14px 34px rgba(23,22,26,.06)}
+  .voice .say::before{content:"";position:absolute;left:-8px;top:22px;width:14px;height:14px;background:var(--white);border-left:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+  .voice .say p{font-size:15.5px;line-height:1.55;font-weight:600;color:var(--ink);word-break:keep-all}
+  .voice .meta{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12.5px;color:var(--ink-2);font-weight:700;flex-wrap:wrap}
+  .voice .meta .t{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
+  .voice .meta .t.c{background:var(--orange-soft);color:var(--orange)}
+  .voice .meta .t.s{background:var(--blue-soft);color:var(--blue)}
+  .voice .meta .ex{margin-left:auto;font-size:11px;color:var(--ink-3);font-weight:600}
+
+  /* ---------- 신청 ---------- */
+  .apply{position:relative;overflow:hidden;background:var(--ink);color:#fff;padding:96px 0 104px;text-align:center}
+  .apply .wrap{position:relative;z-index:2}
+  .apply h2{color:#fff;margin:0 auto;font-size:clamp(26px,4.8vw,42px);max-width:820px}
+  .apply .sub{margin-top:14px;font-size:clamp(16px,2.2vw,19px);color:rgba(255,255,255,.7)}
+  .apply .cta{margin-top:32px}
+  .apply .btn{animation:breathe 2.8s ease-in-out infinite}
+  @keyframes breathe{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(232,84,47,.45)}50%{transform:scale(1.035);box-shadow:0 0 0 22px rgba(232,84,47,0)}}
+  .float{position:absolute;z-index:1;padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);color:rgba(255,255,255,.42);font-size:13px;font-weight:600;white-space:nowrap;animation:drift var(--t,14s) ease-in-out infinite alternate}
+  .float.b{border-color:rgba(43,75,239,.6);color:rgba(140,160,255,.75)}
+  .float.o{border-color:rgba(232,84,47,.6);color:rgba(255,150,120,.8)}
+  @keyframes drift{from{transform:translate(0,0)}to{transform:translate(var(--dx,20px),var(--dy,-16px))}}
+  @media (max-width:599px){
+    .float.hide-m{display:none}
+    .float{font-size:12px;padding:6px 12px}
+    .apply{padding:120px 0 128px}
+    .float.m1{left:5%!important;top:5%!important}
+    .float.m2{right:5%!important;top:11%!important}
+    .float.m3{right:5%!important;bottom:5%!important}
+  }
+  footer{padding:22px 0;text-align:center;font-size:13px;color:var(--ink-3);background:var(--ink);border-top:1px solid rgba(255,255,255,.08)}
+
+  @media (prefers-reduced-motion: reduce){
+    .apply .btn{animation:none}
+    .float{animation:none}
+    .next svg{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20 12l-8 8-9-9V4h7l10 8z"/><circle cx="7.5" cy="7.5" r="1.5"/></symbol>
+  <symbol id="i-steps" viewBox="0 0 24 24"><path d="M4 18h5v-5h5V8h6"/><path d="M17 5l3 3-3 3"/></symbol>
+  <symbol id="i-cards" viewBox="0 0 24 24"><rect x="3" y="7" width="14" height="12" rx="2"/><path d="M7 4h14v12"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+  <symbol id="i-ear" viewBox="0 0 24 24"><path d="M6 10a6 6 0 0 1 12 0c0 4-4 5-4 8a3 3 0 0 1-6 0"/><path d="M10 10a2 2 0 0 1 4 0c0 2-2 2-2 4"/></symbol>
+  <symbol id="i-pick" viewBox="0 0 24 24"><path d="M4 12l5 5L20 7"/></symbol>
+  <symbol id="i-stack" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/><path d="M3 17l9 5 9-5"/></symbol>
+  <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6h6l2 2h10v11H3z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M5 21V4h10v17"/><path d="M15 12h4"/><circle cx="12" cy="12" r="1"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-item" viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></symbol>
+  <symbol id="i-money" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20a5 5 0 0 1 6-4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+  <symbol id="i-bubbles" viewBox="0 0 24 24"><path d="M3 4h11v8H7l-4 3z"/><path d="M14 9h7v8h-2l-3 3v-3h-2v-3"/></symbol>
+  <symbol id="i-stamp" viewBox="0 0 24 24"><path d="M9 3h6v6h3l1 4H5l1-4h3z"/><path d="M4 17h16v4H4z"/></symbol>
+</svg>
+<!-- 등장 애니메이션 -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-stage" id="introStage">
+    <div class="intro-title"><span class="w1">창업</span><span class="w2">와글</span></div>
+    <div class="intro-sub">동네 가게부터 스타트업까지, 같은 조건끼리 모이는 방</div>
+  </div>
+  <button type="button" class="intro-skip" id="introSkip">건너뛰기</button>
+</div>
+
+<div class="topbar" id="topbar">
+  <div class="wrap">
+    <div class="brand"><i></i>창업 와글</div>
+    <a class="btn sm" data-apply href="apply.html">체크리스트 받기</a>
+  </div>
+</div>
+
+<!-- 실시간 띠 -->
+<div class="ticker" aria-hidden="true">
+  <div class="lbl"><i></i>지금 와글와글</div>
+  <div class="track" id="tick"></div>
+</div>
+
+<!-- 1. 첫 화면 -->
+<header class="hero">
+  <div class="chatter" id="chatter" aria-hidden="true"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">창업 와글 · 동네 가게부터 스타트업까지</div>
+      <h1>나와 <mark>같은 업종</mark>, <mark class="b">같은 단계</mark>였던 사람은 그때 무엇을 골랐을까요?</h1>
+      <p class="sub">같은 조건인 사람들이 모인 방. 벌써 와글와글.</p>
+      <div class="flow3">
+        <div class="fs o"><svg class="ic"><use href="#i-tag"/></svg><div><b>업종 고르기</b><small>필라테스, 카페…</small></div></div>
+        <span class="arr">→</span>
+        <div class="fs b"><svg class="ic"><use href="#i-steps"/></svg><div><b>단계 고르기</b><small>자금, 자리, 등록…</small></div></div>
+        <span class="arr">→</span>
+        <div class="fs k buzzcard"><div class="buzz" aria-hidden="true">
+            <i class="av a1"></i><i class="av a2"></i><i class="av a3"></i><i class="av a4"></i>
+            <span class="bb b1">?</span><span class="bb b2">!</span><span class="bb b3">···</span>
+          </div><div><b>커뮤니티 풀, 와글와글</b><small>같은 조건끼리 모임</small></div></div>
+      </div>
+      <div class="cta">
+        <a class="btn" data-apply href="apply.html">
+          창업 단계별 체크리스트 받기
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <p class="gift"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></i>먼저 신청한 분부터 초대합니다.</p>
+      <div class="crowd"><div class="avs" id="crowdAvs"></div><small>오늘 <b>128명</b>이 방에 들어왔어요 <span style="color:var(--ink-3);font-weight:600">· 예시</span></small></div>
+    </div>
+
+    <!-- 필터 보드 -->
+    <div class="board" id="board">
+      <span class="sticker"><i></i><span>지금 <b id="online">37</b>명 접속 중</span></span>
+      <span class="note">예시 화면</span>
+      <div class="frow cat">
+        <span class="fl">업종</span>
+        <div class="fchips" id="catChips"></div>
+      </div>
+      <div class="frow stage">
+        <span class="fl">단계</span>
+        <div class="fchips" id="stageChips"></div>
+      </div>
+      <div class="bar-line"></div>
+      <div class="rooms" id="rooms"></div>
+      <div class="count"><span>지금 열린 방 <b id="cnt">0</b>개</span><span class="try" id="try">눌러서 걸러 보세요</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- 2. 대화 체험 -->
+<section class="talk">
+  <div class="chatter" id="chatter2" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="io">
+      <div class="h2row"><h2>물어보면, 답이 조건별로 정리됩니다.</h2><span class="sticker b"><i></i><span>실시간</span></span></div>
+      <p class="lead">그리고 다른 유저들이 <b>어떻게 결정했는지, 어떤 생각이었는지</b> 이야기를 나눕니다.</p>
+      <div class="flow3">
+        <div class="fs k"><svg class="ic"><use href="#i-chat"/></svg><div><b>물어보기</b><small>내 조건과 함께</small></div></div>
+        <span class="arr">→</span>
+        <div class="fs o"><svg class="ic"><use href="#i-sort"/></svg><div><b>조건별로 정리</b><small>누가 무엇을 골랐나</small></div></div>
+        <span class="arr">→</span>
+        <div class="fs b"><svg class="ic"><use href="#i-bubbles"/></svg><div><b>이야기 나누기</b><small>왜 그렇게 정했는지</small></div></div>
+      </div>
+    </div>
+
+    <div class="demo io" id="demo">
+      <!-- 왼쪽: 내 조건 + 질문 고르기 -->
+      <div class="panel">
+        <div class="pt"><i></i>내 조건</div>
+        <div class="mine" id="mine"></div>
+        <div class="pt" style="margin-top:20px"><i style="background:var(--blue)"></i>물어볼 것 하나 고르기</div>
+        <div class="qs" id="qs"></div>
+        <button type="button" class="btn ask-btn" id="askBtn">물어보기
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <div class="hintline">예시 화면</div>
+      </div>
+
+      <!-- 오른쪽: 대화 -->
+      <div class="panel thread-panel">
+        <div class="thread-head">
+          <div class="pt"><i></i>동네 방</div>
+          <label class="toggle" id="onlyMine"><span class="sw"></span>내 조건과 같은 답만</label>
+        </div>
+        <div class="rhead" id="rhead"></div>
+        <div class="msgs" id="msgs">
+          <div class="empty"><b>질문을 골라 보세요.</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body io">
+      <div class="flow3" style="margin-top:0">
+        <div class="fs k"><svg class="ic"><use href="#i-chat"/></svg><div><b>내 조건 말하기</b><small>업종 · 단계 · 자금 · 경력</small></div></div>
+        <span class="arr">→</span>
+        <div class="fs o"><svg class="ic"><use href="#i-ear"/></svg><div><b>먼저 해본 사람이 듣고</b><small>같은 업종</small></div></div>
+        <span class="arr">→</span>
+        <div class="fs b"><svg class="ic"><use href="#i-pick"/></svg><div><b>그때 고른 것 말해줌</b><small>무엇을 보고 정했나</small></div></div>
+      </div>
+      <div class="facts">
+        <div class="fact"><svg class="ic"><use href="#i-stack"/></svg><div>쓸수록 쌓입니다<small>내 조건이 다음 사람의 사례</small></div></div>
+        <div class="fact"><svg class="ic"><use href="#i-ban"/></svg><div>파는 사람 정보 아님<small>해본 사람만</small></div></div>
+        <div class="fact"><svg class="ic"><use href="#i-folder"/></svg><div>접은 사람도 남습니다<small>안 된 조건도 사례</small></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 체크리스트 -->
+<section class="free">
+  <div class="sky" id="sky" aria-hidden="true">
+    <div class="rider"><div class="inner">
+      <div class="fdoc"><svg viewBox="0 0 84 60" aria-hidden="true">
+  <g class="wing wl"><path d="M30 30 C14 8, -2 18, 6 38 C14 32, 22 30, 30 32 Z"/></g>
+  <g class="wing wr"><path d="M54 30 C70 8, 86 18, 78 38 C70 32, 62 30, 54 32 Z"/></g>
+  <rect class="sheet" x="28" y="12" width="28" height="38" rx="3"/>
+  <rect x="33" y="19" width="14" height="3" rx="1.5" fill="#E8542F"/>
+  <rect x="33" y="26" width="18" height="2.5" rx="1.2" fill="#C9C3B6"/>
+  <rect x="33" y="32" width="16" height="2.5" rx="1.2" fill="#C9C3B6"/>
+  <rect x="33" y="38" width="12" height="2.5" rx="1.2" fill="#C9C3B6"/>
+  <path d="M35 44l3 3 6-6" fill="none" stroke="#2B4BEF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></div>
+      <div class="face" data-rider></div>
+      <div class="hand"></div>
+      <span class="yay">받았다!</span>
+    </div></div>
+  </div>
+  <div class="wrap">
+    <div class="head io">
+      <span class="sticker pin"><i></i><span>오늘 <b id="gotIt">41</b>명이 받아갔어요 · 예시</span></span>
+      <h2>신청하면 단계별 체크리스트를 먼저 드립니다.</h2>
+      <p class="hint">눌러서 확인해 보세요.</p>
+      <div class="checking"><div class="avs" id="checkAvs"></div><small>지금 <b id="checkN">7</b>명이 체크 중</small></div>
+    </div>
+
+    <div class="paper io" id="paper">
+      <div class="progress"><span>지금 확인한 항목</span><span><b id="count">0</b> / 8</span></div>
+      <div class="bar"><i id="bar"></i></div>
+
+      <div class="grp"><i>1단계</i><svg class="ic"><use href="#i-item"/></svg>아이템 정하기</div>
+      <button class="item" style="--i:0"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span>무엇을, 누구에게 팔지 정했는가</span></button>
+
+      <div class="grp"><i>2단계</i><svg class="ic"><use href="#i-money"/></svg>자금 계획</div>
+      <button class="item" style="--i:1"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span>초기비용 / 월 운영비를 나눠 계산했는가</span></button>
+      <button class="item" style="--i:2"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span>자기자금 · 대출 · 지원금 중 무엇으로 시작할지 정했는가</span></button>
+
+      <div class="grp"><i>3단계</i><svg class="ic"><use href="#i-people"/></svg>형태 정하기</div>
+      <button class="item" style="--i:3"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span>1인으로 갈지 사람(또는 공동창업자)을 둘지 정했는가</span></button>
+      <button class="item" style="--i:4"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span>개인사업자 · 법인 중 정했는가</span></button>
+
+      <div class="grp"><i>4단계</i><svg class="ic"><use href="#i-pin"/></svg>자리 찾기</div>
+      <button class="item" style="--i:5"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span>상권·경쟁 가게(또는 경쟁 서비스)를 살펴봤는가</span></button>
+
+      <div class="grp"><i>5단계</i><svg class="ic"><use href="#i-stamp"/></svg>인허가·등록</div>
+      <button class="item" style="--i:6"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span>업종에 필요한 인허가를 확인했는가</span></button>
+      <button class="item" style="--i:7"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span>사업자 등록 시점을 확인했는가</span></button>
+
+      <div class="next">
+        <span>전체 체크리스트 받기</span>
+        <svg viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3.5 후기 -->
+<section class="voices">
+<div class="town" aria-hidden="true">
+<svg viewBox="0 0 1200 200" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DDE3FC"/><stop offset="1" stop-color="#B9C6FA"/></linearGradient>
+    <pattern id="awn" width="12" height="10" patternUnits="userSpaceOnUse"><rect width="6" height="10" fill="#E8542F"/><rect x="6" width="6" height="10" fill="#fff"/></pattern>
+    <pattern id="awn2" width="12" height="10" patternUnits="userSpaceOnUse"><rect width="6" height="10" fill="#2B4BEF"/><rect x="6" width="6" height="10" fill="#fff"/></pattern>
+  </defs>
+  <!-- 하늘 요소 -->
+  <circle cx="1080" cy="34" r="16" fill="#F2B33D" opacity=".9"/>
+  <g class="cloud" fill="#fff" opacity=".9"><ellipse cx="60" cy="40" rx="26" ry="10"/><ellipse cx="80" cy="34" rx="18" ry="12"/></g>
+  <g class="cloud c2" fill="#fff" opacity=".85"><ellipse cx="60" cy="70" rx="22" ry="8"/><ellipse cx="76" cy="65" rx="14" ry="10"/></g>
+  <!-- 땅 -->
+  <rect x="0" y="176" width="1200" height="24" fill="#E2DCD0"/>
+  <rect x="0" y="172" width="1200" height="4" fill="#C9C3B6"/>
+
+  <!-- 카페 -->
+  <g>
+    <rect x="40" y="104" width="120" height="72" rx="4" fill="#FBE4DC" stroke="#17161A" stroke-width="2"/>
+    <rect x="36" y="96" width="128" height="10" rx="3" fill="#17161A"/>
+    <rect x="44" y="106" width="112" height="16" fill="url(#awn)" stroke="#17161A" stroke-width="2"/>
+    <path d="M44 122h112" stroke="#17161A" stroke-width="2"/>
+    <rect x="52" y="132" width="34" height="26" rx="3" fill="#fff" stroke="#17161A" stroke-width="2"/>
+    <rect x="112" y="134" width="30" height="42" rx="3" fill="#E8542F" stroke="#17161A" stroke-width="2"/>
+    <circle cx="136" cy="156" r="2" fill="#fff"/>
+    <rect x="62" y="84" width="10" height="14" fill="#17161A"/>
+    <circle class="smoke" cx="67" cy="80" r="6" fill="#fff"/>
+    <circle class="smoke s2" cx="70" cy="80" r="5" fill="#fff"/>
+    <circle class="smoke s3" cx="64" cy="80" r="4" fill="#fff"/>
+    <text x="100" y="170" text-anchor="middle" font-size="11" font-weight="800" fill="#17161A">카페</text>
+    <path d="M60 140h12v8a6 6 0 0 1-12 0z M72 142h4a3 3 0 0 1 0 6h-4" fill="none" stroke="#17161A" stroke-width="1.6"/>
+  </g>
+  <!-- 나무 -->
+  <g><rect x="184" y="150" width="6" height="26" fill="#8A5A3C"/><circle cx="187" cy="140" r="16" fill="#2BB673"/><circle cx="178" cy="150" r="10" fill="#2BB673"/></g>
+  <!-- 필라테스 -->
+  <g>
+    <rect x="210" y="92" width="110" height="84" rx="4" fill="#DDE3FC" stroke="#17161A" stroke-width="2"/>
+    <rect x="206" y="84" width="118" height="10" rx="3" fill="#2B4BEF"/>
+    <rect x="222" y="104" width="86" height="34" rx="3" fill="#fff" stroke="#17161A" stroke-width="2"/>
+    <path d="M240 132 q10-18 22 0 M252 128 l8-10 M244 118 c0-5 8-5 8 0" fill="none" stroke="#17161A" stroke-width="2" stroke-linecap="round"/>
+    <rect x="252" y="146" width="24" height="30" rx="3" fill="#2B4BEF" stroke="#17161A" stroke-width="2"/>
+    <text x="265" y="169" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">필라테스</text>
+  </g>
+  <!-- 뷰티 -->
+  <g>
+    <rect x="340" y="110" width="90" height="66" rx="4" fill="#FFF1D6" stroke="#17161A" stroke-width="2"/>
+    <path d="M336 112 q49-22 98 0 z" fill="#F2B33D" stroke="#17161A" stroke-width="2"/>
+    <rect x="352" y="126" width="30" height="22" rx="3" fill="#fff" stroke="#17161A" stroke-width="2"/>
+    <rect x="392" y="130" width="26" height="46" rx="3" fill="#E8542F" stroke="#17161A" stroke-width="2"/>
+    <path d="M360 132 l6 10 6-10 M366 142v6" fill="none" stroke="#E8542F" stroke-width="2" stroke-linecap="round"/>
+    <text x="368" y="168" text-anchor="middle" font-size="11" font-weight="800" fill="#17161A">뷰티</text>
+  </g>
+  <!-- 빵집 -->
+  <g>
+    <rect x="450" y="100" width="120" height="76" rx="4" fill="#fff" stroke="#17161A" stroke-width="2"/>
+    <rect x="446" y="92" width="128" height="10" rx="3" fill="#17161A"/>
+    <rect x="454" y="102" width="112" height="16" fill="url(#awn2)" stroke="#17161A" stroke-width="2"/>
+    <rect x="462" y="128" width="46" height="30" rx="3" fill="#FFF1D6" stroke="#17161A" stroke-width="2"/>
+    <ellipse cx="476" cy="146" rx="8" ry="5" fill="#F2B33D" stroke="#17161A" stroke-width="1.5"/>
+    <ellipse cx="494" cy="146" rx="8" ry="5" fill="#F2B33D" stroke="#17161A" stroke-width="1.5"/>
+    <rect x="524" y="132" width="30" height="44" rx="3" fill="#2B4BEF" stroke="#17161A" stroke-width="2"/>
+    <text x="510" y="170" text-anchor="middle" font-size="11" font-weight="800" fill="#17161A">빵집</text>
+  </g>
+  <!-- 골목 표지판 -->
+  <g><rect x="596" y="120" width="4" height="56" fill="#17161A"/><rect x="580" y="112" width="60" height="16" rx="3" fill="#17161A"/><text x="610" y="124" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">동네 ↔ 밸리</text></g>
+
+  <!-- 실리콘밸리 -->
+  <g>
+    <rect x="660" y="40" width="80" height="136" rx="4" fill="url(#glass)" stroke="#17161A" stroke-width="2"/>
+    <g fill="#fff" opacity=".9">
+      <rect class="win" x="668" y="50" width="14" height="10"/><rect class="win b" x="688" y="50" width="14" height="10"/><rect class="win c" x="708" y="50" width="14" height="10"/>
+      <rect class="win c" x="668" y="70" width="14" height="10"/><rect class="win" x="688" y="70" width="14" height="10"/><rect class="win b" x="708" y="70" width="14" height="10"/>
+      <rect class="win b" x="668" y="90" width="14" height="10"/><rect class="win c" x="688" y="90" width="14" height="10"/><rect class="win" x="708" y="90" width="14" height="10"/>
+      <rect x="668" y="110" width="14" height="10"/><rect class="win" x="688" y="110" width="14" height="10"/><rect x="708" y="110" width="14" height="10"/>
+      <rect class="win" x="668" y="130" width="14" height="10"/><rect x="688" y="130" width="14" height="10"/><rect class="win b" x="708" y="130" width="14" height="10"/>
+    </g>
+    <g class="dish"><path d="M700 40 l0-10" stroke="#17161A" stroke-width="2"/><path d="M690 30 a10 6 0 0 0 20 0z" fill="#fff" stroke="#17161A" stroke-width="2"/></g>
+    <rect x="756" y="76" width="96" height="100" rx="4" fill="#fff" stroke="#17161A" stroke-width="2"/>
+    <rect x="756" y="76" width="96" height="22" rx="4" fill="#2B4BEF"/>
+    <text x="804" y="92" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">SaaS</text>
+    <g fill="#DDE3FC" stroke="#17161A" stroke-width="1.5"><rect x="766" y="108" width="22" height="16"/><rect x="796" y="108" width="22" height="16"/><rect x="826" y="108" width="18" height="16"/><rect x="766" y="134" width="22" height="16"/><rect x="796" y="134" width="22" height="16"/><rect x="826" y="134" width="18" height="16"/></g>
+    <rect x="792" y="156" width="22" height="20" fill="#17161A"/>
+    <!-- 차고 스타트업 -->
+    <rect x="870" y="112" width="86" height="64" rx="4" fill="#EEE8DB" stroke="#17161A" stroke-width="2"/>
+    <path d="M866 114 l47-22 47 22z" fill="#E8542F" stroke="#17161A" stroke-width="2"/>
+    <rect x="884" y="132" width="58" height="44" rx="3" fill="#fff" stroke="#17161A" stroke-width="2"/>
+    <path d="M884 142h58M884 152h58M884 162h58" stroke="#C9C3B6" stroke-width="1.5"/>
+    <text x="913" y="127" text-anchor="middle" font-size="9" font-weight="900" fill="#fff">GARAGE</text>
+    <rect x="898" y="100" width="30" height="12" rx="2" fill="#fff" stroke="#17161A" stroke-width="1.5"/><text x="913" y="109" text-anchor="middle" font-size="7" font-weight="900" fill="#17161A">START</text>
+    <!-- 로켓 -->
+    <g class="rocket">
+      <path d="M1000 96 c-14 18 -14 46 -14 66 h28 c0-20 0-48 -14-66z" fill="#fff" stroke="#17161A" stroke-width="2"/>
+      <circle cx="1000" cy="132" r="7" fill="#DDE3FC" stroke="#17161A" stroke-width="2"/>
+      <path d="M986 148 l-10 14 h10z M1014 148 l10 14 h-10z" fill="#E8542F" stroke="#17161A" stroke-width="2"/>
+      <path class="flame" d="M992 164 q8 18 16 0z" fill="#F2B33D"/>
+    </g>
+    <rect x="978" y="164" width="44" height="12" rx="2" fill="#17161A"/>
+    <!-- 야자수 -->
+    <g><path d="M1070 176 q4-40 2-70" stroke="#8A5A3C" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M1072 106 q-24-14-36 4 q18-4 36-4z M1072 106 q26-12 38 6 q-18-6-38-6z M1072 106 q-12-24 6-32 q-6 14-6 32z M1072 106 q16-22 30-14 q-18 2-30 14z" fill="#2BB673" stroke="#17161A" stroke-width="1.5"/></g>
+    <g><path d="M1140 176 q2-30 0-52" stroke="#8A5A3C" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M1140 124 q-20-10-30 4 q14-2 30-4z M1140 124 q22-10 30 4 q-14-4-30-4z M1140 124 q-8-20 6-26 q-6 12-6 26z" fill="#2BB673" stroke="#17161A" stroke-width="1.5"/></g>
+    <g><rect x="1090" y="140" width="4" height="36" fill="#17161A"/><rect x="1064" y="126" width="56" height="18" rx="3" fill="#fff" stroke="#17161A" stroke-width="2"/><text x="1092" y="139" text-anchor="middle" font-size="9" font-weight="900" fill="#17161A">실리콘밸리</text></g>
+  </g>
+</svg>
+</div>
+  <div class="wrap">
+    <div class="head io">
+      <div class="h2row"><h2>동네 사람들 이야기</h2><span class="sticker k">동네 소문</span></div>
+      <span class="tagline">예시 후기 · 오픈 후 실제 후기로 바뀝니다</span>
+    </div>
+    <div class="vgrid io">
+      <div class="voice" style="--i:0">
+        <div class="avatar"><svg viewBox="0 0 72 72" aria-hidden="true">
+            <rect width="72" height="72" fill="#FBE4DC"/>
+            <path d="M17 36c0-14 8-22 19-22s19 8 19 22v26H17z" fill="#2A2320"/>
+            <path d="M12 72c2-11 11-16 24-16s22 5 24 16z" fill="#F2B33D"/>
+            <path d="M30 56h12v-6H30z" fill="#F6D2BC"/>
+            <circle cx="36" cy="39" r="15" fill="#F6D2BC"/>
+            <path d="M21 36c0-10 6-16 15-16s15 6 15 16c-3-6-7-8-15-8s-12 2-15 8z" fill="#2A2320"/>
+            <circle cx="30" cy="41" r="1.7" fill="#17161A"/><circle cx="42" cy="41" r="1.7" fill="#17161A"/>
+            <path d="M31 47c2 2.5 8 2.5 10 0" fill="none" stroke="#17161A" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="25" cy="45" r="2.4" fill="#E8542F" opacity=".3"/><circle cx="47" cy="45" r="2.4" fill="#E8542F" opacity=".3"/>
+            
+          </svg></div>
+        <div class="say">
+          <p>성동구에서 필라테스 준비하는 분을 여기서 처음 만났어요. 자리 얘기만 두 시간 했네요. 혼자 고민할 때랑 완전 달라요.</p>
+          <div class="meta">지은 <span class="t c">필라테스</span><span class="t s">자리 찾기</span><span class="react" data-n="12"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><span>12</span></span><span class="ex">예시</span></div>
+        </div>
+      </div>
+      <div class="voice" style="--i:1">
+        <div class="avatar"><svg viewBox="0 0 72 72" aria-hidden="true">
+            <rect width="72" height="72" fill="#DDE3FC"/>
+            
+            <path d="M12 72c2-11 11-16 24-16s22 5 24 16z" fill="#2B4BEF"/>
+            <path d="M30 56h12v-6H30z" fill="#F1C9AE"/>
+            <circle cx="36" cy="39" r="15" fill="#F1C9AE"/>
+            <path d="M20 36c0-11 7-18 16-18s16 7 16 18c-2-6-6-9-16-9s-14 3-16 9z" fill="#1B1614"/>
+            <circle cx="30" cy="41" r="1.7" fill="#17161A"/><circle cx="42" cy="41" r="1.7" fill="#17161A"/>
+            <path d="M31 47c2 2.5 8 2.5 10 0" fill="none" stroke="#17161A" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="25" cy="45" r="2.4" fill="#E8542F" opacity=".3"/><circle cx="47" cy="45" r="2.4" fill="#E8542F" opacity=".3"/>
+            
+          </svg></div>
+        <div class="say">
+          <p>1인이냐 고용이냐, 반년 고민을 답 세 개 보고 정했어요. 조건이 나랑 같은 사람 답이라 믿음이 갔어요.</p>
+          <div class="meta">현수 <span class="t c">필라테스</span><span class="t s">형태 정하기</span><span class="react" data-n="12"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><span>12</span></span><span class="ex">예시</span></div>
+        </div>
+      </div>
+      <div class="voice" style="--i:2">
+        <div class="avatar"><svg viewBox="0 0 72 72" aria-hidden="true">
+            <rect width="72" height="72" fill="#EEE8DB"/>
+            
+            <path d="M12 72c2-11 11-16 24-16s22 5 24 16z" fill="#17161A"/>
+            <path d="M30 56h12v-6H30z" fill="#EFC4A6"/>
+            <circle cx="36" cy="39" r="15" fill="#EFC4A6"/>
+            <path d="M20 36c0-11 7-18 16-18s16 7 16 18c-2-6-6-9-16-9s-14 3-16 9z" fill="#2A2320"/>
+            <circle cx="30" cy="41" r="1.7" fill="#17161A"/><circle cx="42" cy="41" r="1.7" fill="#17161A"/>
+            <path d="M31 47c2 2.5 8 2.5 10 0" fill="none" stroke="#17161A" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="25" cy="45" r="2.4" fill="#E8542F" opacity=".3"/><circle cx="47" cy="45" r="2.4" fill="#E8542F" opacity=".3"/>
+            <g fill="none" stroke="#17161A" stroke-width="1.6"><circle cx="29" cy="40" r="5"/><circle cx="43" cy="40" r="5"/><path d="M34 40h4"/></g>
+          </svg></div>
+        <div class="say">
+          <p>카페 접은 분 얘기가 제일 도움됐어요. 왜 접었는지 조건까지 남아 있어서, 저는 그 실수를 피했어요.</p>
+          <div class="meta">민재 <span class="t c">카페</span><span class="t s">자금 계획</span><span class="react" data-n="12"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><span>12</span></span><span class="ex">예시</span></div>
+        </div>
+      </div>
+      <div class="voice" style="--i:3">
+        <div class="avatar"><svg viewBox="0 0 72 72" aria-hidden="true">
+            <rect width="72" height="72" fill="#FBE4DC"/>
+            <path d="M18 36c0-13 8-20 18-20s18 7 18 20v14H18z" fill="#3B2A22"/>
+            <path d="M12 72c2-11 11-16 24-16s22 5 24 16z" fill="#E8542F"/>
+            <path d="M30 56h12v-6H30z" fill="#F6D2BC"/>
+            <circle cx="36" cy="39" r="15" fill="#F6D2BC"/>
+            <path d="M21 37c0-10 6-16 15-16s15 6 15 16c-2-5-6-9-15-9s-13 4-15 9z" fill="#3B2A22"/>
+            <circle cx="30" cy="41" r="1.7" fill="#17161A"/><circle cx="42" cy="41" r="1.7" fill="#17161A"/>
+            <path d="M31 47c2 2.5 8 2.5 10 0" fill="none" stroke="#17161A" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="25" cy="45" r="2.4" fill="#E8542F" opacity=".3"/><circle cx="47" cy="45" r="2.4" fill="#E8542F" opacity=".3"/>
+            
+          </svg></div>
+        <div class="say">
+          <p>내가 남긴 답에 "덕분에 정했어요" 답글 받았을 때 진짜 즐거웠어요. 내 경험이 누군가의 사례가 된다는 게요.</p>
+          <div class="meta">서연 <span class="t c">온라인 쇼핑몰</span><span class="t s">인허가·등록</span><span class="react" data-n="12"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><span>12</span></span><span class="ex">예시</span></div>
+        </div>
+      </div>
+      <div class="voice" style="--i:4">
+        <div class="avatar" data-av="5"></div>
+        <div class="say">
+          <p>공동창업자 지분 얘기, 먼저 해본 팀 셋한테 여기서 들었어요. 법인 만들기 전에 정리돼서 진짜 다행이에요.</p>
+          <div class="meta">태호 <span class="t c">앱·SaaS</span><span class="t s">형태 정하기</span><span class="react" data-n="12"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><span>12</span></span><span class="ex">예시</span></div>
+        </div>
+      </div>
+      <div class="voice" style="--i:5">
+        <div class="avatar" data-av="4"></div>
+        <div class="say">
+          <p>지원금 먼저 받고 시드 간 분 답 보고 순서를 바꿨어요. 카페 사장님이 준 월세 팁도 사무실 구할 때 써먹었고요.</p>
+          <div class="meta">유진 <span class="t c">콘텐츠</span><span class="t s">자금 계획</span><span class="react" data-n="12"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><span>12</span></span><span class="ex">예시</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 신청 -->
+<section class="apply">
+  <span class="float o m1" style="left:6%;top:14%;--t:13s;--dx:26px;--dy:-14px">필라테스</span>
+  <span class="float b m2" style="right:8%;top:18%;--t:16s;--dx:-22px;--dy:18px">형태 정하기</span>
+  <span class="float o hide-m" style="left:14%;bottom:18%;--t:15s;--dx:18px;--dy:16px">카페</span>
+  <span class="float b m3" style="right:12%;bottom:14%;--t:12s;--dx:-28px;--dy:-12px">자금 계획</span>
+  <span class="float b hide-m" style="left:38%;top:8%;--t:18s;--dx:14px;--dy:12px">자리 찾기</span>
+  <span class="float o hide-m" style="right:34%;bottom:9%;--t:17s;--dx:-16px;--dy:-14px">온라인 쇼핑몰</span>
+
+  <div class="wrap">
+    <div class="io">
+      <h2>우리 방에 먼저 들어오세요.</h2>
+      <div class="perks">
+        <div class="perk"><svg class="ic"><use href="#i-mail"/></svg>체크리스트 먼저 발송</div>
+        <div class="perk"><svg class="ic"><use href="#i-door"/></svg>문 열 때 먼저 초대</div>
+      </div>
+      <div class="queue"><div class="line" id="queueLine"></div><div class="door"><svg class="ic"><use href="#i-door"/></svg>입장</div><small>지금도 줄 서는 중 · 예시</small></div>
+      <div class="cta">
+        <a class="btn" data-apply href="apply.html">
+          창업 단계별 체크리스트 받기
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 창업 와글</footer>
+
+<script>
+  // ---------- 등장 애니메이션 ----------
+  (function(){
+    var intro = document.getElementById('intro');
+    var seen = false;
+    try { seen = sessionStorage.getItem('wagle-intro') === '1'; } catch(e){}
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (seen || reduced){ intro.remove(); return; }
+    document.body.classList.add('intro-on');
+    var stage = document.getElementById('introStage');
+    var cast = [
+      {av:0, lab:'필라테스', sx:'-70vw', sy:'-30vh', tx:-190, ty:-120, d:.35},
+      {av:1, lab:'카페',     sx:'70vw',  sy:'-40vh', tx:190,  ty:-120, d:.5},
+      {av:2, lab:'온라인 쇼핑몰', sx:'-80vw', sy:'20vh', tx:-250, ty:10, d:.65},
+      {av:3, lab:'뷰티',     sx:'80vw',  sy:'30vh',  tx:250,  ty:10,  d:.8},
+      {av:4, lab:'교육',     sx:'-50vw', sy:'70vh',  tx:-170, ty:135, d:.95},
+      {av:5, lab:'음식점',   sx:'60vw',  sy:'70vh',  tx:170,  ty:135, d:1.1},
+      {av:1, lab:'앱·SaaS',  sx:'0',     sy:'-80vh', tx:0,    ty:-165, d:1.25},
+      {av:3, lab:'콘텐츠',   sx:'0',     sy:'80vh',  tx:0,    ty:160, d:1.4}
+    ];
+    cast.forEach(function(c){
+      var el = document.createElement('div');
+      el.className = 'ia';
+      el.style.cssText = '--sx:' + c.sx + ';--sy:' + c.sy + ';--tx:' + c.tx + 'px;--ty:' + c.ty + 'px;--d:' + c.d + 's';
+      el.innerHTML = '<div class="face">' + avatarSvg(c.av) + '</div><span class="lab">' + c.lab + '</span>';
+      stage.appendChild(el);
+    });
+    var bubs = [
+      {t:'와글와글', k:'o', tx:-115, ty:-215, d:2.0},
+      {t:'저도요!', k:'b', tx:140, ty:-205, d:2.15},
+      {t:'?', k:'k', tx:-250, ty:-150, d:2.3},
+      {t:'와글', k:'p', tx:255, ty:-140, d:2.45}
+    ];
+    bubs.forEach(function(b){
+      var el = document.createElement('span');
+      el.className = 'ib ' + b.k;
+      el.style.cssText = '--tx:' + b.tx + 'px;--ty:' + b.ty + 'px;--d:' + b.d + 's';
+      el.textContent = b.t;
+      stage.appendChild(el);
+    });
+    function done(){
+      if (!intro.parentNode) return;
+      intro.classList.add('out');
+      document.body.classList.remove('intro-on');
+      try { sessionStorage.setItem('wagle-intro', '1'); } catch(e){}
+      setTimeout(function(){ intro.remove(); }, 600);
+    }
+    document.getElementById('introSkip').addEventListener('click', done);
+    setTimeout(done, 3300);
+  })();
+
+  // 신청 버튼 연결
+  document.querySelectorAll('[data-apply]').forEach(function(a){
+    a.href = APPLY_URL;
+    if (/^https?:/i.test(APPLY_URL)){ a.target = '_blank'; a.rel = 'noopener'; }
+  });
+
+  // 상단 고정 바
+  var topbar = document.getElementById('topbar');
+  function onScroll(){ topbar.classList.toggle('show', window.scrollY > 320); }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  // ---------- 필터 보드 (예시 데이터) ----------
+  var CATS = ['전체','필라테스','카페','온라인 쇼핑몰','뷰티','교육','앱·SaaS','콘텐츠'];
+  var STAGES = ['전체','아이템 정하기','자금 계획','형태 정하기','자리 찾기','인허가·등록'];
+  // 작은 일러스트 아바타 (예시)
+  function avatarSvg(k){
+    var V = [
+      {bg:'#FBE4DC',skin:'#F6D2BC',hair:'#2A2320',st:'long',sh:'#F2B33D'},
+      {bg:'#DDE3FC',skin:'#F1C9AE',hair:'#1B1614',st:'short',sh:'#2B4BEF'},
+      {bg:'#EEE8DB',skin:'#EFC4A6',hair:'#2A2320',st:'short',gl:1,sh:'#17161A'},
+      {bg:'#FBE4DC',skin:'#F6D2BC',hair:'#3B2A22',st:'bob',sh:'#E8542F'},
+      {bg:'#E6F4EC',skin:'#F1C9AE',hair:'#1B1614',st:'bun',sh:'#2BB673'},
+      {bg:'#FFF1D6',skin:'#EFC4A6',hair:'#2A2320',st:'short',sh:'#8A5CF6'}
+    ];
+    var o = V[k % V.length], back = '', front = '';
+    if (o.st === 'long'){ back = '<path d="M17 36c0-14 8-22 19-22s19 8 19 22v26H17z" fill="' + o.hair + '"/>'; front = '<path d="M21 36c0-10 6-16 15-16s15 6 15 16c-3-6-7-8-15-8s-12 2-15 8z" fill="' + o.hair + '"/>'; }
+    if (o.st === 'bob'){ back = '<path d="M18 36c0-13 8-20 18-20s18 7 18 20v14H18z" fill="' + o.hair + '"/>'; front = '<path d="M21 37c0-10 6-16 15-16s15 6 15 16c-2-5-6-9-15-9s-13 4-15 9z" fill="' + o.hair + '"/>'; }
+    if (o.st === 'short'){ front = '<path d="M20 36c0-11 7-18 16-18s16 7 16 18c-2-6-6-9-16-9s-14 3-16 9z" fill="' + o.hair + '"/>'; }
+    if (o.st === 'bun'){ front = '<circle cx="36" cy="16" r="6" fill="' + o.hair + '"/><path d="M20 36c0-11 7-18 16-18s16 7 16 18c-2-6-6-9-16-9s-14 3-16 9z" fill="' + o.hair + '"/>'; }
+    var gl = o.gl ? '<g fill="none" stroke="#17161A" stroke-width="1.6"><circle cx="29" cy="40" r="5"/><circle cx="43" cy="40" r="5"/><path d="M34 40h4"/></g>' : '';
+    return '<svg viewBox="0 0 72 72" aria-hidden="true"><rect width="72" height="72" fill="' + o.bg + '"/>' + back +
+      '<path d="M12 72c2-11 11-16 24-16s22 5 24 16z" fill="' + o.sh + '"/><path d="M30 56h12v-6H30z" fill="' + o.skin + '"/>' +
+      '<circle cx="36" cy="39" r="15" fill="' + o.skin + '"/>' + front +
+      '<circle cx="30" cy="41" r="1.7" fill="#17161A"/><circle cx="42" cy="41" r="1.7" fill="#17161A"/>' +
+      '<path d="M31 47c2 2.5 8 2.5 10 0" fill="none" stroke="#17161A" stroke-width="1.6" stroke-linecap="round"/>' +
+      '<circle cx="25" cy="45" r="2.4" fill="#E8542F" opacity=".3"/><circle cx="47" cy="45" r="2.4" fill="#E8542F" opacity=".3"/>' + gl + '</svg>';
+  }
+  function avs(a, b){ return '<div class="ravs"><span class="av">' + avatarSvg(a) + '</span><span class="av">' + avatarSvg(b) + '</span><i class="live"></i></div>'; }
+
+  var ROOMS = [
+    {c:'필라테스',     s:'형태 정하기',  n:12, last:'1인으로 갈지 강사를 둘지, 반년째 고민이에요', who:'성동구 재활샘', t:'방금', un:3, a:[0,1]},
+    {c:'카페',         s:'자금 계획',    n:21, last:'보증금 빼고 초기비용 얼마로 잡으셨어요?', who:'연남 커피', t:'2분 전', un:5, a:[2,3]},
+    {c:'온라인 쇼핑몰', s:'아이템 정하기', n:9,  last:'재고 없이 시작해 본 분, 첫 달 어땠어요?', who:'무재고 준비생', t:'7분 전', un:1, a:[4,5]},
+    {c:'필라테스',     s:'자리 찾기',    n:8,  last:'2층 상가, 유동인구보다 주차가 더 중요할까요?', who:'성동구 재활샘', t:'12분 전', un:0, a:[1,4]},
+    {c:'뷰티',         s:'자금 계획',    n:15, last:'정부 지원금은 어느 단계에서 신청해야 늦지 않나요?', who:'왁싱 준비중', t:'20분 전', un:2, a:[3,0]},
+    {c:'교육',         s:'형태 정하기',  n:6,  last:'개인사업자로 시작했다가 법인으로 바꾼 이유', who:'공부방 원장', t:'31분 전', un:0, a:[5,2]},
+    {c:'카페',         s:'인허가·등록',  n:11, last:'영업신고 전에 위생교육 먼저 받는 게 맞나요?', who:'연남 커피', t:'1시간 전', un:4, a:[0,3]},
+    {c:'뷰티',         s:'자리 찾기',    n:7,  last:'권리금 없는 자리는 이유가 있더라고요', who:'왁싱 준비중', t:'2시간 전', un:0, a:[2,4]},
+    {c:'온라인 쇼핑몰', s:'인허가·등록',  n:13, last:'통신판매업 신고는 사업자등록 바로 뒤에 했어요', who:'무재고 준비생', t:'3시간 전', un:1, a:[1,5]},
+    {c:'앱·SaaS',      s:'형태 정하기',  n:18, last:'공동창업자 지분, 어떻게 나누셨어요?', who:'프리시드 준비생', t:'방금', un:6, a:[5,2]},
+    {c:'앱·SaaS',      s:'자금 계획',    n:14, last:'시드 투자 전에 정부 지원금부터 받는 게 맞나요?', who:'사이드프로젝트러', t:'4분 전', un:2, a:[3,1]},
+    {c:'콘텐츠',       s:'아이템 정하기', n:10, last:'MVP 먼저 만들까요, 팔로워부터 모을까요?', who:'뉴스레터 준비중', t:'9분 전', un:1, a:[4,0]}
+  ];
+  var sel = {c:'전체', s:'전체'};
+  var touched = false;
+
+  function makeChips(list, host, axis){
+    list.forEach(function(v){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'fchip' + (v === '전체' ? ' on' : ''); b.textContent = v;
+      b.addEventListener('click', function(){ touched = true; document.getElementById('try').textContent = ''; setSel(axis, v); });
+      host.appendChild(b);
+    });
+  }
+  makeChips(CATS, document.getElementById('catChips'), 'c');
+  makeChips(STAGES, document.getElementById('stageChips'), 's');
+
+  var roomsHost = document.getElementById('rooms');
+  ROOMS.forEach(function(r){
+    var d = document.createElement('a');
+    d.className = 'room'; d.href = APPLY_URL;
+    d.innerHTML = avs(r.a[0], r.a[1]) +
+      '<div class="rbody"><div class="rname"><i class="c"></i>' + r.c + '<span class="dot">·</span><i class="s"></i>' + r.s + ' 방</div>' +
+      '<div class="rlast"><b>' + r.who + '</b> ' + r.last + '</div></div>' +
+      '<div class="rmeta"><span>' + r.t + '</span>' + (r.un ? '<span class="badge">' + r.un + '</span>' : '<span class="n"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20a5 5 0 0 1 6-4.5"/></svg>' + r.n + '</span>') + '</div>';
+    d.dataset.c = r.c; d.dataset.s = r.s;
+    roomsHost.appendChild(d);
+  });
+
+  function setSel(axis, v){
+    sel[axis] = v;
+    var host = axis === 'c' ? 'catChips' : 'stageChips';
+    document.querySelectorAll('#' + host + ' .fchip').forEach(function(b){ b.classList.toggle('on', b.textContent === v); });
+    var n = 0;
+    var filtering = sel.c !== '전체' || sel.s !== '전체';
+    document.querySelectorAll('.room').forEach(function(d){
+      var ok = (sel.c === '전체' || d.dataset.c === sel.c) && (sel.s === '전체' || d.dataset.s === sel.s);
+      d.classList.toggle('dim', !ok);
+      d.classList.remove('hit'); void d.offsetWidth;
+      if (ok && filtering) d.classList.add('hit');
+      if (ok) n++;
+    });
+    document.getElementById('cnt').textContent = n;
+  }
+  setSel('c','전체');
+
+  // 처음에는 필터가 스스로 바뀌며 시연. 사용자가 누르면 멈춤.
+  var demo = [
+    {c:'필라테스', s:'전체'}, {c:'필라테스', s:'형태 정하기'}, {c:'전체', s:'형태 정하기'},
+    {c:'전체', s:'자금 계획'}, {c:'카페', s:'자금 계획'}, {c:'앱·SaaS', s:'전체'}, {c:'전체', s:'전체'}
+  ];
+  var di = 0;
+  var demoTimer = setInterval(function(){
+    if (touched){ clearInterval(demoTimer); return; }
+    var step = demo[di % demo.length]; di++;
+    if (step.c !== sel.c) setSel('c', step.c);
+    if (step.s !== sel.s) setSel('s', step.s);
+  }, 2300);
+
+  // ---------- 대화 체험 (예시 데이터) ----------
+  var MY = [{t:'필라테스',k:'c'},{t:'형태 정하기',k:'s'},{t:'자기자금'},{t:'재활 10년'},{t:'서울 성동구'},{t:'창업은 처음'}];
+  var MYSET = MY.map(function(m){ return m.t; });
+  var QS = [
+    {s:'형태 정하기', room:'필라테스 · 형태 정하기 방', n:12, on:5, q:'1인으로 갈지 사람을 둘지, 어떻게 정하셨나요?', a:[
+      {n:'성동구 재활샘', av:0, c:['자기자금','재활 10년','서울 성동구'], pick:'1인으로 시작', why:'첫 해 매출을 몰라서 고정 인건비를 안 만들었어요.'},
+      {n:'마포 원장', av:1, c:['대출','경력 5년','마포구'], pick:'사람을 두고 시작', why:'수업 시간대가 겹쳐서 혼자서는 못 받았어요.'},
+      {n:'강남 새내기', av:3, c:['자기자금','창업은 처음','강남구'], pick:'1인으로 시작', why:'처음이라 운영을 먼저 배우고 싶었어요.'},
+      {n:'지원금 준비생', av:2, c:['정부 지원금','경력 3년'], pick:'접었어요', quit:true, why:'월세와 인건비를 같이 놓고 보니 안 맞아서 멈췄어요.'}
+    ], talk:[
+      {me:true, t:'저도 자기자금이라 1인 쪽으로 기울어요. 첫 6개월은 어떻게 버티셨어요?'},
+      {n:'성동구 재활샘', av:0, t:'첫 3개월은 예약제로만 받았어요. 운영비는 미리 빼두고요.'},
+      {n:'마포 원장', av:1, t:'저는 반대로 강사 둔 게 맞았어요. 시간대가 달라서요. 조건 보고 정하세요!'}
+    ]},
+    {s:'자금 계획', room:'필라테스 · 자금 계획 방', n:9, on:3, q:'초기비용과 월 운영비, 어떻게 나눠서 잡으셨나요?', a:[
+      {n:'성동 초보', av:4, c:['자기자금','서울 성동구','창업은 처음'], pick:'운영비 6개월치 확보', why:'6개월 버틸 운영비부터 확보했어요.'},
+      {n:'중고기구파', av:5, c:['대출','경력 8년'], pick:'초기비용 최소', why:'기구는 중고, 인테리어는 최소로 잡았어요.'},
+      {n:'재활 10년차', av:1, c:['정부 지원금','재활 10년'], pick:'지원금 먼저 신청', why:'지원금 심사 일정에 맞춰 오픈을 미뤘어요.'}
+    ], talk:[
+      {me:true, t:'운영비 6개월치는 어떤 기준으로 잡으셨어요?'},
+      {n:'성동 초보', av:4, t:'월세 + 내 생활비 + 기구 할부. 매출은 0으로 놓고 계산했어요.'}
+    ]},
+    {s:'자리 찾기', room:'필라테스 · 자리 찾기 방', n:8, on:2, q:'2층 상가, 유동인구보다 주차가 더 중요할까요?', a:[
+      {n:'성동구 재활샘', av:0, c:['서울 성동구','재활 10년'], pick:'주차 우선', why:'재활 손님은 차로 와요. 주차 2대가 예약률을 바꿨어요.'},
+      {n:'강남 새내기', av:3, c:['자기자금','강남구','창업은 처음'], pick:'유동인구 우선', why:'첫 손님은 간판으로 와서 1층을 골랐어요.'},
+      {n:'마포 원장', av:1, c:['대출','마포구'], pick:'접었어요', quit:true, why:'권리금 없는 이유가 접근성이었어요. 계약 전에 멈췄어요.'}
+    ], talk:[
+      {me:true, t:'주차 2대면 충분했어요? 저는 1대뿐이라서요.'},
+      {n:'성동구 재활샘', av:0, t:'1대면 예약 시간을 30분씩 띄우세요. 저도 그렇게 했어요.'}
+    ]},
+    {s:'형태 정하기', room:'앱·SaaS · 형태 정하기 방', n:18, on:6, q:'공동창업자 지분, 어떻게 나누셨어요?', a:[
+      {n:'프리시드 준비생', av:5, c:['자기자금','개발자 2명','창업은 처음'], pick:'50:50 + 베스팅', why:'둘 다 풀타임이라 반반으로 하고, 4년 베스팅을 걸었어요.'},
+      {n:'사이드프로젝트러', av:2, c:['정부 지원금','기획 1 · 개발 1'], pick:'60:40', why:'아이디어 낸 사람이 더 가져가되, 법인 전에 문서로 남겼어요.'},
+      {n:'뉴스레터 준비중', av:4, c:['자기자금','혼자 시작'], pick:'접었어요', quit:true, why:'지분 얘기를 미루다 사이가 틀어져서 멈췄어요. 먼저 정하세요.'}
+    ], talk:[
+      {me:true, t:'베스팅은 어디서 양식 구하셨어요?'},
+      {n:'프리시드 준비생', av:5, t:'이 방 파일에 올려뒀어요. 변호사 검토 받은 버전이에요.'}
+    ]}
+  ];
+  var curQ = 0, onlyMine = false, playing = false, timers = [];
+
+  var mineHost = document.getElementById('mine');
+  MY.forEach(function(m){ var e = document.createElement('span'); e.className = 'chip ' + (m.k || ''); e.textContent = m.t; mineHost.appendChild(e); });
+
+  var qsHost = document.getElementById('qs');
+  QS.forEach(function(item, i){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'qbtn' + (i === 0 ? ' on' : '');
+    b.innerHTML = '<small>' + item.s + '</small><span>' + item.q + '</span>';
+    b.addEventListener('click', function(){
+      curQ = i;
+      document.querySelectorAll('.qbtn').forEach(function(x, j){ x.classList.toggle('on', j === i); });
+      ask();
+    });
+    qsHost.appendChild(b);
+  });
+
+  var msgs = document.getElementById('msgs');
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+  function matches(a){ return a.c.some(function(t){ return MYSET.indexOf(t) >= 0; }); }
+
+  function ask(){
+    clearTimers();
+    var item = QS[curQ];
+    msgs.innerHTML = '';
+    document.getElementById('rhead').innerHTML = avs(0, 1) + '<div><div class="rt">' + item.room + '</div><div class="rs"><i></i>' + item.n + '명 · 지금 ' + item.on + '명 대화 중</div></div>';
+    var me = document.createElement('div');
+    me.className = 'msg me';
+    me.innerHTML = '<div class="who">나 <span class="tm">방금</span></div><div class="bub">' + item.q + '</div>';
+    msgs.appendChild(me);
+
+    var typing = document.createElement('div');
+    typing.className = 'typing'; typing.innerHTML = '<i></i><i></i><i></i>';
+    later(function(){ msgs.appendChild(typing); }, 350);
+
+    item.a.forEach(function(a, i){
+      later(function(){
+        var m = document.createElement('div');
+        m.className = 'msg' + (a.quit ? ' quit' : '');
+        var conds = a.c.map(function(t){ return '<span class="t' + (MYSET.indexOf(t) >= 0 ? ' hit' : '') + '">' + t + '</span>'; }).join('');
+        m.className += ' o';
+        m.innerHTML = '<div class="mav">' + avatarSvg(a.av || 0) + '</div><div class="mcol"><div class="who">' + a.n + ' <span class="tm">' + (i === 0 ? '방금' : i + '분 전') + '</span></div>' +
+          '<div class="bub"><div class="cond">' + conds + '</div>' + a.why +
+          '<div class="pick' + (a.quit ? ' quit' : '') + '"><span>그때 고른 것 →</span>' + a.pick + '</div></div></div>';
+        m.dataset.hit = matches(a) ? '1' : '0';
+        msgs.insertBefore(m, typing); msgs.scrollTop = msgs.scrollHeight;
+        if (i === item.a.length - 1){ typing.remove(); }
+        applyOnly();
+      }, 900 + i * 850);
+    });
+
+    later(function(){
+      var groups = {};
+      item.a.forEach(function(a){ (groups[a.pick] = groups[a.pick] || []).push(a); });
+      var rows = Object.keys(groups).map(function(k){
+        var g = groups[k];
+        var cs = {}; g.forEach(function(a){ a.c.forEach(function(t){ cs[t] = 1; }); });
+        var quit = g[0].quit;
+        return '<div class="row"><div class="conds">' + Object.keys(cs).map(function(t){ return '<span class="t">' + t + '</span>'; }).join('') +
+          '</div><div class="res' + (quit ? ' quit' : '') + '">' + k + '<small>' + g.length + '명</small></div></div>';
+      }).join('');
+      var sm = document.createElement('div');
+      sm.className = 'summary';
+      sm.innerHTML = '<div class="st"><b>조건별 정리</b>답 ' + item.a.length + '개</div><div class="rows">' + rows + '</div>';
+      msgs.appendChild(sm);
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 900 + item.a.length * 850 + 500);
+
+    // 이야기가 이어짐
+    var base = 900 + item.a.length * 850 + 1500;
+    (item.talk || []).forEach(function(t, i){
+      later(function(){
+        var m = document.createElement('div');
+        m.className = 'msg' + (t.me ? ' me' : ' o');
+        m.innerHTML = t.me
+          ? '<div class="who">나 <span class="tm">방금</span></div><div class="bub">' + t.t + '</div>'
+          : '<div class="mav">' + avatarSvg(t.av || 0) + '</div><div class="mcol"><div class="who">' + t.n + ' <span class="tm">방금</span></div><div class="bub">' + t.t + '</div></div>';
+        m.dataset.hit = '1';
+        msgs.appendChild(m); msgs.scrollTop = msgs.scrollHeight;
+      }, base + i * 1100);
+    });
+    later(function(){
+      var r = document.createElement('div');
+      r.className = 'replybox';
+      r.innerHTML = '<span>답글 쓰기…</span><svg class="ic"><use href="#i-chat"/></svg>';
+      msgs.appendChild(r); msgs.scrollTop = msgs.scrollHeight;
+    }, base + (item.talk ? item.talk.length : 0) * 1100 + 300);
+  }
+
+  function applyOnly(){
+    document.querySelectorAll('#msgs .msg:not(.me)').forEach(function(m){
+      m.classList.toggle('dim', onlyMine && m.dataset.hit !== '1');
+    });
+  }
+  document.getElementById('askBtn').addEventListener('click', ask);
+  document.getElementById('onlyMine').addEventListener('click', function(){
+    onlyMine = !onlyMine; this.classList.toggle('on', onlyMine); applyOnly();
+  });
+  // 화면에 들어오면 첫 질문을 자동으로 한 번 보여줌
+  var demoIO = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ demoIO.disconnect(); setTimeout(ask, 600); } });
+  }, {threshold:0.35});
+  demoIO.observe(document.getElementById('demo'));
+
+  // ---------- 와글와글: 실시간 띠, 말풍선, 접속 중, 살아 움직이는 방 ----------
+  var NAMES = ['성동구 재활샘','연남 커피','무재고 준비생','왁싱 준비중','공부방 원장','마포 원장','강남 새내기','지원금 준비생','중고기구파','재활 10년차','프리시드 준비생','사이드프로젝트러','뉴스레터 준비중'];
+  var FEED = [
+    '<b>성동구 재활샘</b>님이 필라테스 · 자리 찾기 방에 들어왔어요',
+    '<b>연남 커피</b>님이 자금 계획 방에 답을 남겼어요',
+    '<b>무재고 준비생</b>님이 질문을 올렸어요',
+    '<b>왁싱 준비중</b>님이 "덕분에 정했어요"라고 답글을 달았어요',
+    '<b>공부방 원장</b>님이 형태 정하기 방에 들어왔어요',
+    '<b>마포 원장</b>님의 답에 좋아요 4개',
+    '<b>강남 새내기</b>님이 조건 카드를 남겼어요',
+    '<b>지원금 준비생</b>님이 접은 이유를 남겼어요',
+    '카페 · 인허가·등록 방에 새 질문 2개',
+    '<b>재활 10년차</b>님이 주차 얘기에 답했어요',
+    '<b>프리시드 준비생</b>님이 앱·SaaS · 형태 정하기 방에 지분 얘기를 올렸어요',
+    '<b>사이드프로젝트러</b>님이 "지원금 먼저 받고 시드 갔어요"라고 답했어요',
+    '<b>뉴스레터 준비중</b>님이 콘텐츠 방에 들어왔어요'
+  ];
+  var tick = document.getElementById('tick');
+  tick.innerHTML = FEED.concat(FEED).map(function(t){ return '<span>' + t + '</span>'; }).join('');
+
+  var CHATTER = [
+    {t:'보증금 빼고 얼마 잡으셨어요?', k:'', x:'3%', y:'12%', d:0, rot:-3},
+    {t:'저도요!', k:'o', x:'9%', y:'42%', d:2.5, rot:2},
+    {t:'1인으로 시작했어요', k:'b', x:'2%', y:'70%', d:5, rot:-2},
+    {t:'주차가 진짜 중요해요', k:'', x:'86%', y:'10%', d:1.2, rot:3},
+    {t:'접은 이유도 남겨요', k:'k', x:'90%', y:'46%', d:3.8, rot:-2},
+    {t:'위생교육 먼저!', k:'o', x:'84%', y:'76%', d:6.2, rot:2},
+    {t:'같은 성동구예요 👋', k:'', x:'30%', y:'4%', d:4.4, rot:-1, m:1},
+    {t:'와글와글', k:'b', x:'62%', y:'2%', d:7.1, rot:2, m:1},
+    {t:'덕분에 정했어요', k:'o', x:'46%', y:'93%', d:8.3, rot:-2},
+    {t:'재고 없이 시작 가능?', k:'', x:'70%', y:'90%', d:1.9, rot:1},
+    {t:'지분 어떻게 나누셨어요?', k:'b', x:'4%', y:'88%', d:9.4, rot:2},
+    {t:'MVP 먼저? 팔로워 먼저?', k:'o', x:'88%', y:'28%', d:10.6, rot:-3}
+  ];
+  var chatter = document.getElementById('chatter');
+  CHATTER.forEach(function(c){
+    var e = document.createElement('span');
+    e.className = 'cb ' + c.k + (c.m ? ' m' : '');
+    e.style.cssText = 'left:' + c.x + ';top:' + c.y + ';--d:' + c.d + 's;--t:' + (8 + (c.d % 3)) + 's;--rot:' + c.rot + 'deg';
+    e.textContent = c.t;
+    chatter.appendChild(e);
+  });
+
+  var crowd = document.getElementById('crowdAvs');
+  for (var ci = 0; ci < 6; ci++){ var cs = document.createElement('span'); cs.style.animationDelay = (ci * .12) + 's'; cs.innerHTML = avatarSvg(ci); crowd.appendChild(cs); }
+  var onlineEl = document.getElementById('online'), online = 37;
+  setInterval(function(){ online = Math.max(31, Math.min(45, online + (Math.random() < .5 ? -1 : 1))); onlineEl.textContent = online; }, 2600);
+
+  var NEWMSG = [
+    '방금 계약했어요! 조건 카드 올릴게요', '이거 저도 궁금했어요', '저는 반대로 했는데 잘됐어요', '사진 올려요, 봐주세요', '오늘 상담 다녀왔는데 후기 남겨요',
+    '지원금 결과 나왔어요!!', '월세 협상 됐어요 ㅎㅎ', '1인 시작 3개월차 근황', '이 조건이면 저랑 똑같네요', '접었다가 다시 준비 중이에요', 'MVP 배포했어요, 피드백 부탁!', '지분 계약서 양식 공유해요'
+  ];
+  setInterval(function(){
+    var rooms = Array.prototype.slice.call(document.querySelectorAll('.room')).filter(function(r){ return !r.classList.contains('dim'); });
+    if (!rooms.length) return;
+    var r = rooms[Math.floor(Math.random() * rooms.length)];
+    var last = r.querySelector('.rlast'), meta = r.querySelector('.rmeta');
+    last.innerHTML = '<b>' + NAMES[Math.floor(Math.random() * NAMES.length)] + '</b> ' + NEWMSG[Math.floor(Math.random() * NEWMSG.length)];
+    last.classList.add('new');
+    meta.querySelector('span').textContent = '방금';
+    var badge = meta.querySelector('.badge');
+    if (!badge){ meta.innerHTML = '<span>방금</span><span class="badge">1</span>'; badge = meta.querySelector('.badge'); }
+    else badge.textContent = (+badge.textContent || 0) + 1;
+    badge.classList.remove('bump'); void badge.offsetWidth; badge.classList.add('bump');
+    var host = r.parentNode;
+    host.insertBefore(r, host.firstChild);
+    r.classList.remove('fresh'); void r.offsetWidth; r.classList.add('fresh');
+    host.scrollTop = 0;
+    setTimeout(function(){ last.classList.remove('new'); }, 2500);
+  }, 3400);
+
+  // ---------- 하단부 와글와글 ----------
+  // 후기 아바타(data-av)
+  document.querySelectorAll('.avatar[data-av]').forEach(function(el){ el.innerHTML = avatarSvg(+el.dataset.av); });
+
+  // 대화 섹션 배경 말풍선
+  var CHATTER2 = [
+    {t:'저는 60:40으로 했어요', k:'b', x:'3%', y:'18%', d:1, rot:-2},
+    {t:'운영비 6개월치 먼저!', k:'o', x:'2%', y:'62%', d:4.2, rot:2},
+    {t:'주차 1대면 30분 간격', k:'', x:'88%', y:'22%', d:2.6, rot:2},
+    {t:'접은 이유 남겨요', k:'k', x:'90%', y:'66%', d:6.8, rot:-2},
+    {t:'MVP 먼저 배포했어요', k:'', x:'86%', y:'44%', d:8.9, rot:1}
+  ];
+  var chatter2 = document.getElementById('chatter2');
+  CHATTER2.forEach(function(c){
+    var e = document.createElement('span');
+    e.className = 'cb ' + c.k;
+    e.style.cssText = 'left:' + c.x + ';top:' + c.y + ';--d:' + c.d + 's;--t:' + (8 + (c.d % 3)) + 's;--rot:' + c.rot + 'deg';
+    e.textContent = c.t;
+    chatter2.appendChild(e);
+  });
+
+  // 채팅방 입장 알림
+  setInterval(function(){
+    if (!document.querySelector('#msgs .msg')) return;
+    var sysEl = document.createElement('div');
+    sysEl.className = 'sys';
+    sysEl.innerHTML = '<b>' + NAMES[Math.floor(Math.random() * NAMES.length)] + '</b>님이 들어왔어요';
+    var rb = document.querySelector('#msgs .replybox');
+    if (rb) msgs.insertBefore(sysEl, rb); else msgs.appendChild(sysEl);
+    msgs.scrollTop = msgs.scrollHeight;
+    var rs = document.querySelector('#rhead .rs');
+    if (rs){ var m = rs.textContent.match(/지금 (\d+)명/); if (m) rs.innerHTML = '<i></i>' + rs.textContent.replace(/지금 \d+명/, '지금 ' + (+m[1] + 1) + '명'); }
+  }, 6500);
+
+  // 체크리스트: 체크 중 무리
+  var checkAvs = document.getElementById('checkAvs');
+  for (var ki = 0; ki < 5; ki++){ var kk = document.createElement('span'); kk.style.animationDelay = (ki * .12) + 's'; kk.innerHTML = avatarSvg((ki + 2) % 6); checkAvs.appendChild(kk); }
+  var checkN = document.getElementById('checkN'), gotIt = document.getElementById('gotIt');
+  setInterval(function(){
+    var n = +checkN.textContent + (Math.random() < .5 ? -1 : 1); n = Math.max(4, Math.min(11, n)); checkN.textContent = n;
+    if (Math.random() < .35){ gotIt.textContent = +gotIt.textContent + 1; }
+  }, 3000);
+
+  // 후기 공감 톡톡
+  setInterval(function(){
+    var rs = document.querySelectorAll('.voice .react');
+    if (!rs.length) return;
+    var r = rs[Math.floor(Math.random() * rs.length)];
+    var n = r.querySelector('span'); n.textContent = +n.textContent + 1;
+    r.classList.remove('bump'); void r.offsetWidth; r.classList.add('bump');
+  }, 2200);
+
+  // 신청 구역: 입장 행렬
+  var qLine = document.getElementById('queueLine'), qi = 0;
+  function joinQueue(){
+    var e = document.createElement('span'); e.innerHTML = avatarSvg(qi++ % 6); qLine.appendChild(e);
+    if (qLine.children.length > 6){ var first = qLine.firstElementChild; first.classList.add('leave'); setTimeout(function(){ first.remove(); }, 500); }
+  }
+  for (var qj = 0; qj < 4; qj++) joinQueue();
+  setInterval(joinQueue, 1800);
+
+  // ---------- 날개 달린 서류 ----------
+  (function(){
+    var sky = document.getElementById('sky');
+    var DOC = "<svg viewBox=\"0 0 84 60\" aria-hidden=\"true\">\n  <g class=\"wing wl\"><path d=\"M30 30 C14 8, -2 18, 6 38 C14 32, 22 30, 30 32 Z\"/></g>\n  <g class=\"wing wr\"><path d=\"M54 30 C70 8, 86 18, 78 38 C70 32, 62 30, 54 32 Z\"/></g>\n  <rect class=\"sheet\" x=\"28\" y=\"12\" width=\"28\" height=\"38\" rx=\"3\"/>\n  <rect x=\"33\" y=\"19\" width=\"14\" height=\"3\" rx=\"1.5\" fill=\"#E8542F\"/>\n  <rect x=\"33\" y=\"26\" width=\"18\" height=\"2.5\" rx=\"1.2\" fill=\"#C9C3B6\"/>\n  <rect x=\"33\" y=\"32\" width=\"16\" height=\"2.5\" rx=\"1.2\" fill=\"#C9C3B6\"/>\n  <rect x=\"33\" y=\"38\" width=\"12\" height=\"2.5\" rx=\"1.2\" fill=\"#C9C3B6\"/>\n  <path d=\"M35 44l3 3 6-6\" fill=\"none\" stroke=\"#2B4BEF\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>";
+    var docs = [
+      {top:'8%', t:24, d:0, rev:0}, {top:'30%', t:30, d:-9, rev:1}, {top:'55%', t:26, d:-4, rev:0},
+      {top:'72%', t:34, d:-18, rev:1}, {top:'18%', t:28, d:-14, rev:1}, {top:'88%', t:22, d:-6, rev:0}
+    ];
+    docs.forEach(function(c){
+      var e = document.createElement('div');
+      e.className = 'fdoc' + (c.rev ? ' rev' : '');
+      e.style.cssText = 'top:' + c.top + ';--t:' + c.t + 's;--d:' + c.d + 's';
+      e.innerHTML = DOC;
+      sky.appendChild(e);
+    });
+    document.querySelector('[data-rider]').innerHTML = avatarSvg(1);
+  })();
+
+  // 스크롤 진입 효과
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('reveal'); io.unobserve(e.target); } });
+  }, {threshold:0.2});
+  document.querySelectorAll('.io').forEach(function(el){ io.observe(el); });
+
+  // 체크리스트
+  var items = document.querySelectorAll('.item'), count = document.getElementById('count'), bar = document.getElementById('bar'), paper = document.getElementById('paper');
+  items.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btn.classList.toggle('done');
+      var n = document.querySelectorAll('.item.done').length;
+      count.textContent = n; bar.style.width = (n / items.length * 100) + '%';
+      paper.classList.remove('complete');
+      if (n === items.length){ void paper.offsetWidth; paper.classList.add('complete'); }
+    });
+  });
+</script>
+</body>
+</html>

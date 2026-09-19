@@ -7,12 +7,32 @@
 
 <!-- ==========================================================
      신청 내용을 어디로 보낼지는 여기만 바꾸세요.
-     - action 이 비어 있으면: 저장하지 않고 완료 화면만 보여줍니다. (지금 상태)
-     - 구글폼을 만든 뒤: action 에 구글폼의 formResponse 주소를,
-       fields 에 각 질문의 entry 번호를 넣으면 답이 구글폼으로 들어갑니다.
+
+     [지금 설정] FormSubmit → 신청이 들어오면 아래 MAIL_TO 주소로 메일이 옵니다.
+       · 별도 가입 없음. 첫 신청이 들어올 때 FormSubmit이 MAIL_TO 주소로
+         "Confirm your email" 확인 메일을 한 번 보냅니다.
+         그 메일의 확인 버튼을 누른 뒤부터 실제 신청 메일이 들어옵니다.
+       · 확인을 마치면 FormSubmit이 이메일 대신 쓸 수 있는 임의 문자열
+         (예: "a1b2c3d4...")을 줍니다. 스팸 수집을 막으려면 MAIL_TO 값을
+         그 문자열로 바꿔주세요. 코드는 그대로 두면 됩니다.
+
+     [대안] 구글폼으로 받고 싶으면 GOOGLE_FORM.action 에 구글폼의
+       formResponse 주소를, fields 에 각 질문의 entry 번호를 넣으세요.
+       둘 다 켜두면 메일과 구글폼 양쪽으로 들어갑니다.
      ========================================================== -->
 <script>
-  const SUBMIT = {
+  // 신청 메일을 받을 주소 (또는 FormSubmit이 발급한 임의 문자열)
+  const MAIL_TO = "wiseryou@naver.com";
+
+  // 메일 제목·옵션
+  const MAIL_OPTS = {
+    _subject: "[창업와글] 방 입장 사전 신청",
+    _template: "table",   // 표 형태로 보기 좋게
+    _captcha: "false"     // 신청자에게 캡차 화면을 띄우지 않음
+  };
+
+  // (선택) 구글폼에도 같이 저장하고 싶을 때만 채우세요.
+  const GOOGLE_FORM = {
     action: "",
     fields: { name: "entry.0", email: "entry.0", phone: "entry.0", industry: "entry.0", stage: "entry.0" }
   };
@@ -495,10 +515,43 @@
     var btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.style.opacity = .7;
 
-    if (SUBMIT.action){
-      var fd = new FormData();
-      order.forEach(function(k){ fd.append(SUBMIT.fields[k], values[k].trim()); });
-      fetch(SUBMIT.action, {method:'POST', mode:'no-cors', body:fd}).catch(function(){});
+    // ---- 1) 메일로 보내기 (FormSubmit) ----
+    if (MAIL_TO){
+      var payload = {
+        "이름": values.name.trim(),
+        "이메일": values.email.trim(),
+        "연락처": values.phone.trim(),
+        "업종": values.industry.trim(),
+        "단계": values.stage.trim(),
+        "신청시각": new Date().toLocaleString('ko-KR', {timeZone:'Asia/Seoul'}),
+        "_subject": MAIL_OPTS._subject + " · " + values.name.trim() + " / " + values.industry.trim(),
+        "_template": MAIL_OPTS._template,
+        "_captcha": MAIL_OPTS._captcha,
+        "_replyto": values.email.trim()   // 메일에서 바로 답장하면 신청자에게 갑니다
+      };
+
+      fetch("https://formsubmit.co/ajax/" + encodeURIComponent(MAIL_TO), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ console.log("[신청 전송]", d); })
+      .catch(function(err){
+        console.warn("[신청 전송 실패, 재시도]", err);
+        // 네트워크/CORS 문제 시 일반 엔드포인트로 한 번 더 (응답은 못 읽지만 접수는 됩니다)
+        var fd = new FormData();
+        Object.keys(payload).forEach(function(k){ fd.append(k, payload[k]); });
+        fetch("https://formsubmit.co/" + encodeURIComponent(MAIL_TO),
+              {method:"POST", mode:"no-cors", body:fd}).catch(function(){});
+      });
+    }
+
+    // ---- 2) (선택) 구글폼에도 저장 ----
+    if (GOOGLE_FORM.action){
+      var gfd = new FormData();
+      order.forEach(function(k){ gfd.append(GOOGLE_FORM.fields[k], values[k].trim()); });
+      fetch(GOOGLE_FORM.action, {method:'POST', mode:'no-cors', body:gfd}).catch(function(){});
     }
 
     // 카드가 길을 따라 올라가 더미에 쌓임
